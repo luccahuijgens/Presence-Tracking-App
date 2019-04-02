@@ -5,7 +5,7 @@ using System.Linq;
 using Foundation;
 using UIKit;
 
-namespace TestApplicate.iOS
+namespace praticeApp.iOS
 {
     public class Application
     {
