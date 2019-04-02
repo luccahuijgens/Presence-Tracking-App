@@ -1,17 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using Xamarin.Forms;
 
-namespace TestApplicate
+
+namespace Notes
 {
     public partial class MainPage : ContentPage
     {
+        string _fileName = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "notes.txt");
+
         public MainPage()
         {
             InitializeComponent();
+
+
         }
+        void OnSaveButtonClicked(object sender, EventArgs e)
+        {
+            result.Text = "" + (Convert.ToInt64(editor.Text) * 2);
+            editor.Text = result.Text;
+
+        }
+
     }
 }
