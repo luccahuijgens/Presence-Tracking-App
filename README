@@ -9,3 +9,14 @@ Voor de ontwikkeling van de app is het volgende gebruikt:
 Android Emulator: v27.3.9
 SDK Patch Applier: v4
 
+Known Bugs/errors:
+
+Attendance Key:
+{
+    "status": "success",
+    "object": {
+        "name": "Connector_X23",
+        "key": "459KrmhgSItMD0xBPX2KnThfsjUQXEMsh44P6YVu"
+    },
+    "code": 200
+}
