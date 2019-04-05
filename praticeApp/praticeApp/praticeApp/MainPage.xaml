@@ -9,6 +9,9 @@
         <Label Text="Welcome to Xamarin.Forms!" 
            HorizontalOptions="Center"
            VerticalOptions="CenterAndExpand" />
+        <Entry x:Name="StudentID" Placeholder="Vul StudentID in" />
+        <Button x:Name="SubmitButton" Text="Press Me" />
+        <Label x:Name="NameLabel" Text="InitialText" />
     </StackLayout>
 
 </ContentPage>
