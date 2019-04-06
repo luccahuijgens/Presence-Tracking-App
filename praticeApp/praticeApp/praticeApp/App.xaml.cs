@@ -11,7 +11,7 @@ namespace praticeApp
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            MainPage = new Feed();
         }
 
         protected override void OnStart()
