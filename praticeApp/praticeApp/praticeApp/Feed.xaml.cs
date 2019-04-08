@@ -18,7 +18,10 @@ namespace praticeApp
         public Feed()
         {
             InitializeComponent();
-
+            ToolbarItems.Add(new ToolbarItem("Search", "search.png", () =>
+            {
+                //logic code goes here
+            }));
             updateFeed();
         }
 
@@ -53,15 +56,14 @@ namespace praticeApp
             }
         }
 
-        async void Handle_ItemTapped(object sender, ItemTappedEventArgs e)
+        private void ItemTapped(object sender, ItemTappedEventArgs e)
         {
-            if (e.Item == null)
-                return;
-
-            await DisplayAlert("Item Tapped", "An item was tapped.", "OK");
-
-            //Deselect Item
-            ((ListView)sender).SelectedItem = null;
+            Notification tappedNotification = (Notification)((ListView)sender).SelectedItem;
+            DisplayAlert("Notifcation Tapped!", "Notification ID: " + tappedNotification.ID, "Ok");
+        }
+        private void UpdateFeedButton(object sender, EventArgs args)
+        {
+            updateFeed();
         }
     }
 }
