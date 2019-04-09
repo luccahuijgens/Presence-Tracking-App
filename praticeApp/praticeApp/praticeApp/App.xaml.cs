@@ -10,8 +10,8 @@ namespace praticeApp
         public App()
         {
             InitializeComponent();
-
-            MainPage = new Feed();
+            
+            MainPage = new NavigationPage(new NavMaster());
         }
 
         protected override void OnStart()
