@@ -1,11 +1,30 @@
+    
 Voor de ontwikkeling van de app is het volgende gebruikt:
 
 1. VisualStudio v15.9.10
-2. Xamarin: v4.12.3
+2. Xamarin: v4.12.3 (inlcuding Xamarin.Forms v3.6.0.29)
 3. Android emulator: 8.1
+
 
 - Android SDK Tools: v26.1.1
 - Android SDK Build-Tools: v27.03
 Android Emulator: v27.3.9
 SDK Patch Applier: v4
 
+#Known Bugs/errors: many.
+
+Attendance Key:
+{
+    "status": "success",
+    "object": {
+        "name": "Connector_X23",
+        "key": "459KrmhgSItMD0xBPX2KnThfsjUQXEMsh44P6YVu"
+    },
+    "code": 200
+}
+
+#Dependencies:
+-	Newtonsoft.Json
+-	Plugin.BLE
+-	ZXing.Net.Mobile
+-	ZXing.Mobile.Form

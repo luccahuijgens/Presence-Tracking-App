@@ -10,15 +10,15 @@ using Xamarin.Forms.Xaml;
 namespace praticeApp
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class NavMasterDetail : ContentPage
+    public partial class BlueTooth : ContentPage
     {
-        public NavMasterDetail()
+        public BlueTooth()
         {
-
             InitializeComponent();
-            
-
         }
-       
+        public void ActivateBluetooth(object sender, EventArgs e)
+        {
+            //Hier komen de bluetooth functies
+        }
     }
 }
