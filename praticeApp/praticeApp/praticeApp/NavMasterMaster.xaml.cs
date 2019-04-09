@@ -33,9 +33,10 @@ namespace praticeApp
             {
                 MenuItems = new ObservableCollection<NavMasterMenuItem>(new[]
                 {
-                    new NavMasterMenuItem { Id = 0, Title = "Page 1", TargetType=(typeof (NavMasterDetail))},
-                    new NavMasterMenuItem { Id = 1, Title = "Page 2", TargetType=(typeof (Scan))},
-              
+                    new NavMasterMenuItem { Id = 0, Title = "Home", TargetType=(typeof (NavMasterDetail))},
+                    new NavMasterMenuItem { Id = 1, Title = "Qr-scan", TargetType=(typeof (Scan))},
+                    new NavMasterMenuItem { Id = 2, Title = "Feed", TargetType=(typeof (Feed))},
+
                 });
             }
             
