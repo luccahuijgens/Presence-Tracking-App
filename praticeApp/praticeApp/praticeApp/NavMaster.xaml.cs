@@ -15,6 +15,7 @@ namespace praticeApp
         public NavMaster()
         {
             InitializeComponent();
+            NavigationPage.SetHasNavigationBar(this, false);
             MasterPage.ListView.ItemSelected += ListView_ItemSelected;
         }
 

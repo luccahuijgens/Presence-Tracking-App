@@ -10,7 +10,7 @@ namespace praticeApp
         public App()
         {
             InitializeComponent();
-
+            
             MainPage = new NavigationPage(new NavMaster());
         }
 

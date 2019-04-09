@@ -25,6 +25,8 @@ namespace praticeApp
         {
 
             var scanPage = new ZXingScannerPage();
+            var animat = new Animation();
+            scanPage.Animate("Qr", animat, 5, 100, null, null, null);
 
 
             scanPage.OnScanResult += (result) =>

@@ -14,7 +14,10 @@ namespace praticeApp
     {
         public NavMasterDetail()
         {
+
             InitializeComponent();
+
         }
+       
     }
 }
