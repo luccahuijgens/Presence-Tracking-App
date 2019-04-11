@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+			 x:Class="praticeApp.Views.Feed"
+			 Title="Feed">
+    <StackLayout>
+        <ListView x:Name="MyListView"
+            ItemsSource="{Binding NotificationList}"
+            ItemTapped="ItemTapped"
+            CachingStrategy="RecycleElement"
+            HasUnevenRows = "True"
+            RowHeight = "-1">
+
+            <!--Built in Cells-->
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout BackgroundColor="White" Padding="10,5,10,5">
+                            <Label Text = "{Binding Title}" FontSize="16" TextColor="#303030" FontFamily="Arial"/>
+                            <Label Text = "{Binding Body}" FontSize="10" FontFamily="Arial" TextColor="#303030"/>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+            <!--Custom View Cells-->
+            <!--
+    <ListView.ItemTemplate>
+      <DataTemplate>
+        <ViewCell>
+          <StackLayout>
+            <Label Text="{Binding Text}" 
+                   Style="{DynamicResource ListItemTextStyle}" />
+            <Label Text="{Binding Detail}" 
+                   Style="{DynamicResource ListItemDetailTextStyle}"/>
+          </StackLayout>
+        </ViewCell>
+      </DataTemplate>
+    </ListView.ItemTemplate>
+    -->
+        </ListView>
+        <Button x:Name="UpdateFeed" Text="Update Feed" Clicked="UpdateFeedButton" />
+    </StackLayout>
+</ContentPage>
