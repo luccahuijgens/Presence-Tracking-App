@@ -7,8 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Foundation;
 using Plugin.BLE;
-
-
+using Plugin.BLE.Abstractions.Exceptions;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -36,23 +35,48 @@ namespace praticeApp
             var state = ble.State;
             var adapter = ble.Adapter;
             var deviceList = new ArrayList();
-            adapter.ScanTimeout = 10000;
-          
         
+            Plugin.BLE.Abstractions.Contracts.IDevice device = null;
+            
+            adapter.ScanTimeout = 10000;
+  
+          
             
             adapter.DeviceDiscovered += (s, a) =>
             {
                 deviceList.Add(a.Device);
                 if (a.Device.Name == "AA-Beacon")
                 {
-                    DisplayAlert("Bluetooth device", "id: " + a.Device.Id.ToString() + " Name: " + a.Device.Name + " Rssi: " + a.Device.Rssi.ToString() + "Hash code: " + a.Device.GetHashCode().ToString() + " Native: " + a.Device.NativeDevice, "ok");
+                    device = a.Device;
+                    adapter.StopScanningForDevicesAsync();
+                    BleConect(device, adapter);
+
+                    //DisplayAlert("Bluetooth device", "id: " + a.Device.Id.ToString() + " Name: " + a.Device.Name + " Rssi: " + a.Device.Rssi.ToString() + "Hash code: " + a.Device.GetHashCode().ToString() + " Native: " + a.Device.NativeDevice, "ok");
                 }
                 
             };
             await adapter.StartScanningForDevicesAsync();
 
+           
+        }
 
+        public async void BleConect(Plugin.BLE.Abstractions.Contracts.IDevice device, Plugin.BLE.Abstractions.Contracts.IAdapter adapter)
+        {
+            try
+            {
+                await adapter.ConnectToDeviceAsync(device);
+                var beaconservices = device.GetServicesAsync();
+                await DisplayAlert("state", device.State.ToString() + " services: " + beaconservices.ToString(), "ok");
+                adapter.DisconnectDeviceAsync(device);
+
+            }
+            catch (DeviceConnectionException e)
+            {
+                DisplayAlert("ERROR", "COULDN'T CONNCET", "FUUU");
+            }
 
         }
+            
+        
     }
 }
