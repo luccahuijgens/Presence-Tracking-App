@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace praticeApp
+namespace praticeApp.Domain
 {
     public class Notification
     {
