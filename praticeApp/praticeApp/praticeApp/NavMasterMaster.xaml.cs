@@ -36,6 +36,7 @@ namespace praticeApp
                     new NavMasterMenuItem { Id = 0, Title = "Home", TargetType=(typeof (NavMasterDetail))},
                     new NavMasterMenuItem { Id = 1, Title = "Qr-scan", TargetType=(typeof (Scan))},
                     new NavMasterMenuItem { Id = 2, Title = "Feed", TargetType=(typeof (Feed))},
+                    new NavMasterMenuItem { Id = 3, Title = "BlueTooth", TargetType=(typeof (BlueTooth))},
 
                 });
             }
