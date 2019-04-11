@@ -18,6 +18,7 @@ namespace praticeApp
         }
         public void ActivateBluetooth(object sender, EventArgs e)
         {
+
             //Hier komen de bluetooth functies
         }
     }
