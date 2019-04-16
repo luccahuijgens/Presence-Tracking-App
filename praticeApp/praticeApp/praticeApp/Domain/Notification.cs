@@ -4,10 +4,12 @@ using System.Text;
 
 namespace praticeApp.Domain
 {
-    public class Notification
+    public class Notification : FeedItem
     {
-        public int ID { get; set; }
-        public string Title { get; set; }
-        public string Body { get; set; }
+        public String Subject { get; set; }
+        public List<String> Tags{get;set;}
+        public String Sender { get; set; }
+        public DateTime Date { get; set; }
+
     }
 }
