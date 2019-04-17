@@ -1,8 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:local="clr-namespace:praticeApp.Views"
 			 x:Class="praticeApp.Views.Feed"
 			 Title="Feed">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:DateConverter x:Key="cnvDate"></local:DateConverter>
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <StackLayout>
         <ListView x:Name="MyListView"
             ItemsSource="{Binding NotificationList}"
@@ -15,9 +21,24 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
-                        <StackLayout BackgroundColor="White" Padding="10,5,10,5">
-                            <Label Text = "{Binding Title}" FontSize="16" TextColor="#303030" FontFamily="Arial"/>
-                            <Label Text = "{Binding Body}" FontSize="10" FontFamily="Arial" TextColor="#303030"/>
+                        <StackLayout BackgroundColor="White" Padding="10,8,10,8">
+                            <Label  Margin ="0" Text = "{Binding Sender}" FontSize="18" TextColor="#303030" FontFamily="Arial"/>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="8*"></ColumnDefinition>
+                                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+
+                                <StackLayout>
+                                    <Label Text="{Binding Title}" Font ="Bold" FontSize="14" FontFamily="Arial" Grid.Column="0" />
+                                    <Label Text="{Binding Body}" LineBreakMode="TailTruncation" WidthRequest="50" FontSize="10" FontFamily="Arial" Grid.Column="0" />
+                                </StackLayout>
+                                <Label Text="{Binding Date,Converter={StaticResource cnvDate}}" FontSize="12" FontFamily="Arial" Grid.Column="1" />
+                            </Grid>
                         </StackLayout>
                     </ViewCell>
                 </DataTemplate>
@@ -39,6 +60,6 @@
     </ListView.ItemTemplate>
     -->
         </ListView>
-        <Button x:Name="UpdateFeed" Text="Update Feed" Clicked="UpdateFeedButton" />
+        <Button BackgroundColor="#00a98c" TextColor="White" x:Name="UpdateFeed" Text="Update Feed" Clicked="UpdateFeedButton" />
     </StackLayout>
 </ContentPage>
