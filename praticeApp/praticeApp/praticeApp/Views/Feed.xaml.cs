@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -14,7 +15,7 @@ namespace praticeApp.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Feed : ContentPage
     {
-        public ObservableCollection<Notification> NotificationList { get; set; }
+        public ObservableCollection<FeedItem> FeedList { get; set; }
 
         public Feed()
         {
@@ -24,15 +25,22 @@ namespace praticeApp.Views
 
         void updateFeed()
         {
-            NotificationList = new ObservableCollection<Notification>(NotificationService.GetNotifications());
-            MyListView.ItemsSource = NotificationList;
+            List<FeedItem> combinedList= NotificationService.GetNotifications().Cast<FeedItem>().Concat(QuestionService.GetQuestions().Cast<FeedItem>()).ToList();
+            combinedList.Sort((x, y) => DateTime.Compare(x.Date, y.Date));
+            combinedList.Reverse();
+            FeedList = new ObservableCollection<FeedItem>(combinedList);
+            MyListView.ItemsSource = FeedList;
         }
 
         private void ItemTapped(object sender, ItemTappedEventArgs e)
         {
-            Notification tappedNotification = (Notification)((ListView)sender).SelectedItem;
-            var newPage = new NotificationDetail(tappedNotification);
-            Navigation.PushAsync(newPage);
+            FeedItem feedItem = (FeedItem)((ListView)sender).SelectedItem;
+            if (feedItem.FeedType == "Notification")
+            {
+                Notification tappedNotification = (Notification)feedItem;
+                var newPage = new NotificationDetail(tappedNotification);
+                Navigation.PushAsync(newPage);
+            }
         }
         private void UpdateFeedButton(object sender, EventArgs args)
         {

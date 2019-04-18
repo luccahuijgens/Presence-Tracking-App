@@ -31,6 +31,9 @@
     <Compile Update="Views\NavMasterMenuItem.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="Views\QuestionDetail.xaml.cs">
+      <DependentUpon>QuestionDetail.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

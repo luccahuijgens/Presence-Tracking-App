@@ -10,17 +10,21 @@ namespace praticeApp.DataAccess
     {
         public QuestionLoader() { }
 
-        private Question convertJson(JObject Question)
+        private Question convertJson(JObject question)
         {
-            int ID = (int)Question["id"];
-            string Title = (String)Question["title"];
-            string Body = (String)Question["body"];
-            return new Question { ID = ID, Title = Title, Body = Body };
+            int ID = (int)question["id"];
+            DateTime Date = DateTime.Parse((String)question["date"]);
+            string Sender = (String)question["sender"];
+            string Subject = (String)question["subject"];
+            string Title = (String)question["title"];
+            string Body = (String)question["body"];
+            string QuestionType = (String)question["questionType"];
+            return new Question { FeedType = "Question", ID = ID, Date = Date, Sender = Sender, Subject = Subject, Title = Title, Body = Body, QuestionType=QuestionType };
         }
         public List<Question> getQuestions()
         {
             List<Question> QuestionList = new List<Question>();
-            string url = "http://5ca5f65f3a08260014278eaf.mockapi.io/Questions";
+            string url = "http://5ca5f65f3a08260014278eaf.mockapi.io/questions";
 
 
                 using (System.IO.Stream s = GetConnection(url).GetResponseStream())

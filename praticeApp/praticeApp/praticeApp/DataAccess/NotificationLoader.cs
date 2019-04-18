@@ -18,7 +18,7 @@ namespace praticeApp.DataAccess
             string Subject = (String)notification["subject"];
             string Title = (String)notification["title"];
             string Body = (String)notification["body"];
-            return new Notification { ID = ID, Date = Date, Sender = Sender, Subject = Subject, Title = Title, Body = Body };
+            return new Notification { FeedType="Notification" ,ID = ID, Date = Date, Sender = Sender, Subject = Subject, Title = Title, Body = Body };
         }
         public List<Notification> getNotifications()
         {
