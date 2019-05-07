@@ -13,9 +13,9 @@ namespace praticeApp.DataAccess
         private Notification convertJson(JObject notification)
         {
             int ID = (int)notification["id"];
-            DateTime Date = DateTime.Parse((String)notification["date"]);
-            string Subject = (String)notification["subject"];
-            string Content = (String)notification["content"];
+            DateTime Date = DateTime.Parse((String)notification["attributes"]["date"]);
+            string Subject = (String)notification["attributes"]["subject"];
+            string Content = (String)notification["attributes"]["content"];
             return new Notification {FeedItemType="Notification",ID = ID, Date = Date, Subject = Subject,Content=Content,Header=Content};
         }
         public List<Notification> getNotifications()
