@@ -6,7 +6,8 @@ namespace praticeApp.Domain
 {
     public class Notification : FeedItem
     {
-        public List<String> Tags { get; set; }
+        public DateTime Date { get; set; }
+        public String Content { get; set; }
 
         public string dateToString()
         {

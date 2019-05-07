@@ -22,7 +22,7 @@
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout BackgroundColor="White" Padding="10,8,10,8">
-                            <Label  Margin ="0" Text = "{Binding Sender}" FontSize="18" TextColor="#303030" FontFamily="Arial"/>
+                            <Label  Margin ="0" Text = "{Binding Subject}" FontSize="18" TextColor="#303030" FontFamily="Arial"/>
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
@@ -34,10 +34,9 @@
                                 </Grid.ColumnDefinitions>
 
                                 <StackLayout>
-                                    <Label Text="{Binding Title}" Font ="Bold" FontSize="14" FontFamily="Arial" Grid.Column="0" />
-                                    <Label Text="{Binding Body}" LineBreakMode="TailTruncation" WidthRequest="50" FontSize="10" FontFamily="Arial" Grid.Column="0" />
+                                    <Label Text="{Binding FeedItemType}" Font ="Bold" FontSize="14" FontFamily="Arial" Grid.Column="0" />
+                                    <Label Text="{Binding Header}" LineBreakMode="TailTruncation" WidthRequest="50" FontSize="10" FontFamily="Arial" Grid.Column="0" />
                                 </StackLayout>
-                                <Label Text="{Binding Date,Converter={StaticResource cnvDate}}" FontSize="12" FontFamily="Arial" Grid.Column="1" />
                             </Grid>
                         </StackLayout>
                     </ViewCell>

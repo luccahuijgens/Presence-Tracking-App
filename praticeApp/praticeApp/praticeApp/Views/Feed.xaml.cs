@@ -26,8 +26,6 @@ namespace praticeApp.Views
         void updateFeed()
         {
             List<FeedItem> combinedList= NotificationService.GetNotifications().Cast<FeedItem>().Concat(QuestionService.GetQuestions().Cast<FeedItem>()).ToList();
-            combinedList.Sort((x, y) => DateTime.Compare(x.Date, y.Date));
-            combinedList.Reverse();
             FeedList = new ObservableCollection<FeedItem>(combinedList);
             MyListView.ItemsSource = FeedList;
         }
@@ -35,10 +33,15 @@ namespace praticeApp.Views
         private void ItemTapped(object sender, ItemTappedEventArgs e)
         {
             FeedItem feedItem = (FeedItem)((ListView)sender).SelectedItem;
-            if (feedItem.FeedType == "Notification")
+            if (feedItem.GetType()==typeof(Notification))
             {
                 Notification tappedNotification = (Notification)feedItem;
                 var newPage = new NotificationDetail(tappedNotification);
+                Navigation.PushAsync(newPage);
+            }else if (feedItem.GetType() == typeof(Question))
+            {
+                Question tappedQuestion = (Question)feedItem;
+                var newPage = new QuestionDetail(tappedQuestion);
                 Navigation.PushAsync(newPage);
             }
         }

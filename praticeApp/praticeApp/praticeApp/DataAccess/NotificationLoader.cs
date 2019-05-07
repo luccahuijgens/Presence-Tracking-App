@@ -14,16 +14,14 @@ namespace praticeApp.DataAccess
         {
             int ID = (int)notification["id"];
             DateTime Date = DateTime.Parse((String)notification["date"]);
-            string Sender = (String)notification["sender"];
             string Subject = (String)notification["subject"];
-            string Title = (String)notification["title"];
-            string Body = (String)notification["body"];
-            return new Notification { FeedType="Notification" ,ID = ID, Date = Date, Sender = Sender, Subject = Subject, Title = Title, Body = Body };
+            string Content = (String)notification["content"];
+            return new Notification {FeedItemType="Notification",ID = ID, Date = Date, Subject = Subject,Content=Content,Header=Content};
         }
         public List<Notification> getNotifications()
         {
             List<Notification> NotificationList = new List<Notification>();
-            string url = "http://5ca5f65f3a08260014278eaf.mockapi.io/notifications";
+            string url = "https://5cd16a84d4a78300147bea4c.mockapi.io/notifications";
 
 
                 using (System.IO.Stream s = GetConnection(url).GetResponseStream())
