@@ -9,7 +9,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ZXing.Net.Mobile.Forms;
 
-namespace praticeApp
+namespace praticeApp.Views
 {
     public partial class Scan : ContentPage
     {

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace praticeApp
+namespace praticeApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class NavMasterMaster : ContentPage
@@ -28,7 +28,7 @@ namespace praticeApp
         class NavMasterMasterViewModel : INotifyPropertyChanged
         {
             public ObservableCollection<NavMasterMenuItem> MenuItems { get; set; }
-            
+
             public NavMasterMasterViewModel()
             {
                 MenuItems = new ObservableCollection<NavMasterMenuItem>(new[]
@@ -40,7 +40,7 @@ namespace praticeApp
 
                 });
             }
-            
+
             #region INotifyPropertyChanged Implementation
             public event PropertyChangedEventHandler PropertyChanged;
             void OnPropertyChanged([CallerMemberName] string propertyName = "")

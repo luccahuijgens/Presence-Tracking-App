@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace praticeApp
+namespace praticeApp.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class NavMasterDetail : ContentPage
@@ -16,9 +16,9 @@ namespace praticeApp
         {
 
             InitializeComponent();
-            
+
 
         }
-       
+
     }
 }

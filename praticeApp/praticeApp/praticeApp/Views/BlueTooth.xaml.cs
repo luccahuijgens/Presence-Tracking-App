@@ -8,7 +8,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using UniversalBeacon.Library.Core.Interop;
 
-namespace praticeApp
+namespace praticeApp.Views
 {
     internal class BeaconService : IDisposable
     {
