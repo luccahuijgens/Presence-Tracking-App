@@ -6,6 +6,9 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using OpenNETCF.IoC;
+using UniversalBeacon.Library.Core.Interfaces;
+using UniversalBeacon.Library;
 
 namespace praticeApp.Droid
 {
@@ -20,6 +23,12 @@ namespace praticeApp.Droid
             base.OnCreate(savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             LoadApplication(new App());
+            var provider = RootWorkItem.Services.Get<IBluetoothPacketProvider>();
+            if (provider == null)
+            {
+                provider = new AndroidBluetoothPacketProvider(this);
+                RootWorkItem.Services.Add<IBluetoothPacketProvider>(provider);
+            }
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {

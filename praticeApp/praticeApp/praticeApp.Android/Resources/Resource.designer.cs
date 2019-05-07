@@ -26,6 +26,8 @@ namespace praticeApp.Droid
 		
 		public static void UpdateIdValues()
 		{
+			global::UniversalBeacon.Library.Resource.String.ApplicationName = global::praticeApp.Droid.Resource.String.ApplicationName;
+			global::UniversalBeacon.Library.Resource.String.Hello = global::praticeApp.Droid.Resource.String.Hello;
 			global::Xamarin.Forms.Platform.Android.Resource.Attribute.actionBarSize = global::praticeApp.Droid.Resource.Attribute.actionBarSize;
 			global::ZXing.Net.Mobile.Forms.Android.Resource.Layout.zxingscanneractivitylayout = global::praticeApp.Droid.Resource.Layout.zxingscanneractivitylayout;
 			global::ZXing.Net.Mobile.Forms.Android.Resource.Layout.zxingscannerfragmentlayout = global::praticeApp.Droid.Resource.Layout.zxingscannerfragmentlayout;
@@ -3979,6 +3981,12 @@ namespace praticeApp.Droid
 		
 		public partial class String
 		{
+			
+			// aapt resource value: 0x7f08003e
+			public const int ApplicationName = 2131230782;
+			
+			// aapt resource value: 0x7f08003d
+			public const int Hello = 2131230781;
 			
 			// aapt resource value: 0x7f080016
 			public const int abc_action_bar_home_description = 2131230742;

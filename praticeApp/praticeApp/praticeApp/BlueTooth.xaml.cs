@@ -1,82 +1,90 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Foundation;
-using Plugin.BLE;
-using Plugin.BLE.Abstractions.Exceptions;
+using OpenNETCF.IoC;
+using UniversalBeacon.Library.Core.Entities;
+using UniversalBeacon.Library.Core.Interfaces;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using UniversalBeacon.Library.Core.Interop;
 
 namespace praticeApp
 {
+    internal class BeaconService : IDisposable
+    {
+        private readonly BeaconManager _manager;
+
+        public BeaconService()
+        {
+            // get the platform-specific provider
+            var provider = RootWorkItem.Services.Get<IBluetoothPacketProvider>();
+            Debug.WriteLine("Before provider !=");
+            if (null != provider)
+            {
+                Debug.WriteLine("After provider !=");
+                // create a beacon manager, giving it an invoker to marshal collection changes to the UI thread
+                _manager = new BeaconManager(provider, Device.BeginInvokeOnMainThread);
+                _manager.Start();
+                Debug.WriteLine("After start");
+
+                _manager.BeaconAdded += _manager_BeaconAdded;
+                provider.AdvertisementPacketReceived += Provider_AdvertisementPacketReceived;
+
+            }
+        }
+
+        public void Dispose()
+        {
+            _manager?.Stop();
+        }
+
+        public ObservableCollection<Beacon> Beacons => _manager?.BluetoothBeacons;
+
+
+        void _manager_BeaconAdded(object sender, Beacon e)
+        {
+            Debug.WriteLine($"_manager_BeaconAdded {sender} Beacon {e.BluetoothAddressAsString}");
+            if (e.BluetoothAddressAsString.Equals("7F:AA:4A:01:55:FC"))
+            {
+                Debug.WriteLine("Beacon found making packet.");
+
+                Debug.WriteLine(e.BeaconType.ToString());
+                
+
+
+
+            }
+        }
+
+        void Provider_AdvertisementPacketReceived(object sender, UniversalBeacon.Library.Core.Interop.BLEAdvertisementPacketArgs e)
+        {
+            Debug.WriteLine($"Provider_AdvertisementPacketReceived {sender} Beacon {e}");
+        }
+
+    }
 
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BlueTooth : ContentPage
     {
+        private BeaconService _service;
         public BlueTooth()
         {
             InitializeComponent();
         }
-        public void ActivateBluetooth (object sender, EventArgs e)
+        public void ActivateBluetooth(object sender, EventArgs e)
         {
-           BleScan();
-            
-
-            //Hier komen de bluetooth functies
-        }
-
-        public async void BleScan()
-        {
-            var ble = CrossBluetoothLE.Current;
-            var state = ble.State;
-            var adapter = ble.Adapter;
-            var deviceList = new ArrayList();
-        
-            Plugin.BLE.Abstractions.Contracts.IDevice device = null;
-            
-            adapter.ScanTimeout = 10000;
-  
-          
-            
-            adapter.DeviceDiscovered += (s, a) =>
+            _service = RootWorkItem.Services.Get<BeaconService>();
+            if (_service == null)
             {
-                deviceList.Add(a.Device);
-                if (a.Device.Name == "AA-Beacon")
-                {
-                    device = a.Device;
-                    adapter.StopScanningForDevicesAsync();
-                    BleConect(device, adapter);
-
-                    //DisplayAlert("Bluetooth device", "id: " + a.Device.Id.ToString() + " Name: " + a.Device.Name + " Rssi: " + a.Device.Rssi.ToString() + "Hash code: " + a.Device.GetHashCode().ToString() + " Native: " + a.Device.NativeDevice, "ok");
-                }
-                
-            };
-            await adapter.StartScanningForDevicesAsync();
-
-           
-        }
-
-        public async void BleConect(Plugin.BLE.Abstractions.Contracts.IDevice device, Plugin.BLE.Abstractions.Contracts.IAdapter adapter)
-        {
-            try
-            {
-                await adapter.ConnectToDeviceAsync(device);
-                var beaconservices = device.GetServicesAsync();
-                await DisplayAlert("state", device.State.ToString() + " services: " + beaconservices.ToString(), "ok");
-                adapter.DisconnectDeviceAsync(device);
-
+                Debug.WriteLine("Service is null.");
+                _service = RootWorkItem.Services.AddNew<BeaconService>();
+                if (_service.Beacons != null) _service.Beacons.CollectionChanged += Beacons_CollectionChanged;
             }
-            catch (DeviceConnectionException e)
-            {
-                DisplayAlert("ERROR", "COULDN'T CONNCET", "FUUU");
-            }
-
+            Debug.WriteLine("Service is not null.");
         }
-            
-        
+        private void Beacons_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Debug.WriteLine($"Beacons_CollectionChanged {sender} e {e}");
+        }
     }
 }

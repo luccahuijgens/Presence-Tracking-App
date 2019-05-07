@@ -28,3 +28,9 @@ Attendance Key:
 -	Plugin.BLE
 -	ZXing.Net.Mobile
 -	ZXing.Mobile.Form
+
+Beacon data:
+ID
+Major
+Minor
+Sterkte

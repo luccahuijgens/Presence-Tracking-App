@@ -12,6 +12,7 @@ namespace praticeApp
             InitializeComponent();
             
             MainPage = new NavigationPage(new NavMaster());
+
         }
 
         protected override void OnStart()
