@@ -9,6 +9,7 @@ using Android.OS;
 using OpenNETCF.IoC;
 using UniversalBeacon.Library.Core.Interfaces;
 using UniversalBeacon.Library;
+using Plugin.CurrentActivity;
 
 namespace praticeApp.Droid
 {
@@ -29,6 +30,8 @@ namespace praticeApp.Droid
                 provider = new AndroidBluetoothPacketProvider(this);
                 RootWorkItem.Services.Add<IBluetoothPacketProvider>(provider);
             }
+
+            CrossCurrentActivity.Current.Init(Application);
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {
