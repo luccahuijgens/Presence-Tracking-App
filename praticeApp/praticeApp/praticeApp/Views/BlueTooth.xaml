@@ -6,6 +6,7 @@
         <StackLayout>
             <Label Text="Test hier de bluetooth"/>
             <Button Text="Fire it up" Clicked="ActivateBluetooth"/>
+            <Label x:Name="beaconsText" Margin="5, 5, 5, 5"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

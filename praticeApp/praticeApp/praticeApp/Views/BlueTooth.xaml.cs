@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using OpenNETCF.IoC;
@@ -11,22 +13,23 @@ using Plugin.Permissions;
 using Plugin.Permissions.Abstractions;
 using System.Threading.Tasks;
 using praticeApp.Service;
+using praticeApp.Resources;
 
 namespace praticeApp.Views
 {
-    
 
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BlueTooth : ContentPage
     {
-        private BeaconService _service;
+        private BeaconDiscovery _beaconDiscovery;
 
         public BlueTooth()
         {
             InitializeComponent();
+
+            _beaconDiscovery = new BeaconDiscovery();
         }
             
-
         public async Task RequestPermissions()
         {
             await RequestLocationPermission();
@@ -43,107 +46,108 @@ namespace praticeApp.Views
             // Actually coarse location would be enough, the plug-in only provides a way to request fine location
             var requestedPermissions = await CrossPermissions.Current.RequestPermissionsAsync(Plugin.Permissions.Abstractions.Permission.Location);
             var requestedPermissionStatus = requestedPermissions[Plugin.Permissions.Abstractions.Permission.Location];
-            Debug.WriteLine("Location permission status: " + requestedPermissionStatus);
-            
-            // Set the permissions granted flag.
-            // _permissionGranted = (requestedPermissionStatus == PermissionStatus.Granted); // Change to CrossPermissions.Current.CheckPermissionStatusAsync
-        }
-
-        public void DumpBeacon(Beacon b)
-        {
-            Debug.WriteLine("MAC Address: " + b.BluetoothAddressAsString);
-            Debug.WriteLine("Beacon Type: " + b.BeaconType.ToString());
-
-            // Whenever a beacon protocol is detected, we print the advertisement data.
-            if (b.BeaconType != Beacon.BeaconTypeEnum.Unknown)
-            {
-                Debug.WriteLine("Amount of frames: " + b.BeaconFrames.Count);
-
-                if (b.BeaconFrames.Count > 0)
-                {
-                    foreach (var beaconFrame in b.BeaconFrames)
-                    {
-                        if (beaconFrame.IsValid())
-                        {
-                            // If we are dealing with a proximity beacon, dump to debug.
-                            if (beaconFrame.GetType() == typeof(ProximityBeaconFrame))
-                            {
-                                Debug.WriteLine("--> Proximity frame detected!");
-
-                                // Conversion to JSON and call API...
-
-                                ProximityBeaconFrame proximityFrame = (ProximityBeaconFrame)beaconFrame;
-                                Debug.WriteLine("--> Major: " + proximityFrame.MajorAsString);
-                                Debug.WriteLine("--> Minor: " + proximityFrame.MinorAsString);
-                                Debug.WriteLine("--> UUID: " + proximityFrame.UuidAsString);
-                                Debug.WriteLine("--> TX power: " + proximityFrame.TxPower.ToString() + " dB");
-                            }
-                        }
-                    }
-
-                }
-            }
-        }
-
-        public bool EnableBluetoothLEDiscovery()
-        {
-            _service = RootWorkItem.Services.Get<BeaconService>();
-            if (_service == null)
-            {
-                Debug.WriteLine("Activating Beacon discovery service...");
-                _service = RootWorkItem.Services.AddNew<BeaconService>();
-                if (_service.Beacons != null) _service.Beacons.CollectionChanged += Beacons_CollectionChanged;
-
-                // Service on (10 seconds)
-                // Service sleeping (5 minutes)
-                // Service on (10 seconds)
-                // Service sleeping (5 minutes)
-
-                // Instantiate a timer to stop the service and process our results.
-                Device.StartTimer(TimeSpan.FromSeconds(5), () =>
-                {
-                    Debug.WriteLine("Deactivating Beacon discovery service...");
-                    Debug.WriteLine("Final beacon count: " + _service.Beacons.Count);
-
-                    foreach (Beacon b in _service.Beacons)
-                    {
-                        DumpBeacon(b);
-                    }
-
-                    _service.Dispose();
-                    RootWorkItem.Services.Remove(_service); // Cleanup the service...
-
-                    // --> Start registration service
-                    // --> Stop registration service
-
-                    // -----> POST API CALL (YNC) Json with all beacons
-                    // -----> Response: Registered/unregistred (classroom HL15-2.34)
-
-                    // We want to kill the timer directly, so we return false. The timer will now stop.
-                    return false;
-                });
-
-                return true;
-            }
-            else
-            {
-                Debug.WriteLine("Beacon service pointer is null...");
-                return false;
-            }
         }
 
         public async void ActivateBluetooth(object sender, EventArgs e)
         {
+            ((Button)sender).IsEnabled = false;
+
             await RequestPermissions();
 
-            if (!EnableBluetoothLEDiscovery())
+            try
             {
+                await _beaconDiscovery.PerformSingleScan();
+            } catch (System.NullReferenceException)
+            {
+                _beaconDiscovery.Disable();
                 await DisplayAlert("Fout", "Er is een onbekende fout opgetreden!", "OK");
+                ((Button)sender).IsEnabled = true;
+
+                return;
+            }
+
+            var result = _beaconDiscovery.GetLatestScanResult();
+            var beacons = new ObservableCollection<Beacon>();
+
+            foreach (Beacon b in result)
+            {
+                if (b.BeaconType != Beacon.BeaconTypeEnum.Unknown && b.BeaconFrames.Count > 0)
+                {
+                    beacons.Add(b);
+                }
+            }
+
+            if (beacons.Count > 0)
+            {
+                String str = "Er zijn " + beacons.Count + " beacons gevonden:\n";
+
+                foreach (Beacon b in beacons)
+                {
+                    str += " - " + GetBeaconUUID(b);
+                    str += "\n";
+                }
+
+                //await DisplayAlert("Succes!", str, "OK");
+                beaconsText.Text = str;
+            }
+
+            ((Button)sender).IsEnabled = true;
+        }
+
+        public String GetBeaconUUID(Beacon b)
+        {
+            // Whenever a beacon protocol is detected, we print the advertisement data.
+            if (b.BeaconType != Beacon.BeaconTypeEnum.Unknown)
+            {
+
+                foreach (var beaconFrame in b.BeaconFrames)
+                {
+                    if (beaconFrame.IsValid())
+                    {
+                        // If we are dealing with a proximity beacon, dump to debug.
+                        if (beaconFrame.GetType() == typeof(ProximityBeaconFrame))
+                        {
+                            return ((ProximityBeaconFrame)beaconFrame).UuidAsString;
+                        }
+                    }
+                }
+            }
+
+            return "";
+        }
+
+        public void DumpBeacon(Beacon b)
+        {
+            // Whenever a beacon protocol is detected, we print the advertisement data.
+            if (b.BeaconType != Beacon.BeaconTypeEnum.Unknown)
+            {
+                Debug.WriteLine("MAC Address: " + b.BluetoothAddressAsString);
+                Debug.WriteLine("Beacon Type: " + b.BeaconType.ToString());
+                Debug.WriteLine("Amount of frames: " + b.BeaconFrames.Count);
+
+                foreach (var beaconFrame in b.BeaconFrames)
+                {
+                    if (beaconFrame.IsValid())
+                    {
+                        // If we are dealing with a proximity beacon, dump to debug.
+                        if (beaconFrame.GetType() == typeof(ProximityBeaconFrame))
+                        {
+                            Debug.WriteLine("--> Proximity frame detected!");
+
+                            // Conversion to JSON and call API...
+
+                            ProximityBeaconFrame proximityFrame = (ProximityBeaconFrame)beaconFrame;
+                            Debug.WriteLine("--> Major: " + proximityFrame.MajorAsString);
+                            Debug.WriteLine("--> Minor: " + proximityFrame.MinorAsString);
+                            Debug.WriteLine("--> UUID: " + proximityFrame.UuidAsString);
+                            Debug.WriteLine("--> TX power: " + proximityFrame.TxPower.ToString() + " dB");
+                        }
+                    }
+                }
             }
         }
-        private void Beacons_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            Debug.WriteLine($"Beacons_CollectionChanged {sender} e {e}");
-        }
+
     }
+
+
 }
