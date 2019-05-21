@@ -4,7 +4,7 @@ using System.Text;
 
 namespace praticeApp.DataAccess
 {
-    public class BaseLoader
+    public abstract class BaseLoader
     {
         public BaseLoader()
         {

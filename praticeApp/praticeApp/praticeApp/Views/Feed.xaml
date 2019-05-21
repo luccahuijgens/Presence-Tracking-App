@@ -4,11 +4,7 @@
              xmlns:local="clr-namespace:praticeApp.Views"
 			 x:Class="praticeApp.Views.Feed"
 			 Title="Feed">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <local:DateConverter x:Key="cnvDate"></local:DateConverter>
-        </ResourceDictionary>
-    </ContentPage.Resources>
+
     <StackLayout>
         <ListView x:Name="MyListView"
             ItemsSource="{Binding FeedList}"
