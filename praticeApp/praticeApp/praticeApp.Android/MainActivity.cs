@@ -10,6 +10,7 @@ using OpenNETCF.IoC;
 using UniversalBeacon.Library.Core.Interfaces;
 using UniversalBeacon.Library;
 using Plugin.CurrentActivity;
+using Android.Bluetooth;
 
 namespace praticeApp.Droid
 {
@@ -32,6 +33,11 @@ namespace praticeApp.Droid
             }
 
             CrossCurrentActivity.Current.Init(Application);
+
+            if (!BluetoothAdapter.DefaultAdapter.IsEnabled)
+            {
+                BluetoothAdapter.DefaultAdapter.Enable();
+            }
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {
