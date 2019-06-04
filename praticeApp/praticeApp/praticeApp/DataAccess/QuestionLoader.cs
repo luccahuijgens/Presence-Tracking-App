@@ -13,11 +13,12 @@ namespace praticeApp.DataAccess
         private Question convertJson(JObject question)
         {
             int ID = (int)question["id"];;
-            string Subject = (String)question["subject"];
+            string Subject = (String)question["attributes"]["subject"];
+            DateTime Date = DateTime.Parse((String)question["attributes"]["date"]);
             string Title = (String)question["title"];
             string QuestionType = (String)question["type"];
             List<String> Tags = new List<string>();
-            return new Question {FeedItemType="Question", ID = ID, Tags=Tags, Subject = Subject, Title = Title, QuestionType=QuestionType,Header=Title };
+            return new Question { FeedItemType = "Question", ID = ID, Tags = Tags, Subject = Subject, Title = Title, QuestionType = QuestionType, Header = Title, Date = Date };
         }
         public List<Question> GetQuestions()
         {
