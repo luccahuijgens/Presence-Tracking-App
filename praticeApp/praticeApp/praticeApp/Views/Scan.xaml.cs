@@ -24,51 +24,67 @@ namespace praticeApp.Views
         public async void ScanAsync()
         {
 
+
             var scanPage = new ZXingScannerPage();
             var animat = new Animation();
             scanPage.Animate("Qr", animat, 5, 100, null, null, null);
-
+            await Navigation.PushAsync(scanPage);
 
             scanPage.OnScanResult += (result) =>
             {
                 // Stop scanning
                 scanPage.IsScanning = false;
+                // GetName(result.Text);
+                Console.WriteLine("\n" + result.ToString() + "\n");
 
                 // Pop the page and show the result
                 Device.BeginInvokeOnMainThread(() =>
                 {
-                    Navigation.PopAsync();
-                    getName(result.Text);
+                        Navigation.PopAsync();
                 });
             };
 
-            // Navigate to our scanner page
-            await Navigation.PushAsync(scanPage);
 
         }
-        private void getName(String StudentID)
+        private Boolean GetName(String StudentID)
         {
-            string url = "https://training.aattendance.nl/api/v0/studentsearch/?search=" + StudentID;
+            string url = "https://beacon.aattendance.nl/api/v2/students";
             var webRequest = System.Net.WebRequest.Create(url);
             if (webRequest != null)
             {
                 webRequest.Method = "GET";
                 webRequest.Timeout = 12000;
                 webRequest.ContentType = "application/json";
-                webRequest.Headers.Add("X-API-KEY", "459KrmhgSItMD0xBPX2KnThfsjUQXEMsh44P6YVu");
-
-                using (System.IO.Stream s = webRequest.GetResponse().GetResponseStream())
+                webRequest.Headers.Add("Authorization", "Bearer " + StudentID);
+                try
                 {
-                    using (System.IO.StreamReader sr = new System.IO.StreamReader(s))
+                    using (System.IO.Stream s = webRequest.GetResponse().GetResponseStream())
                     {
-                        string jsonResponse = sr.ReadToEnd();
-                        JObject jobject = JObject.Parse(jsonResponse);
-                        var StudentArray = jobject["object"];
-                        var Student = StudentArray[0];
-                        NameLabel.Text = (String)Student["student_name"];
-                        //NameLabel.Text = jsonResponse;
+                        using (System.IO.StreamReader sr = new System.IO.StreamReader(s))
+                        {
+
+                            string jsonResponse = sr.ReadToEnd();
+                            JObject jobject = JObject.Parse(jsonResponse);
+                            return true;
+                            //var StudentArray = jobject["object"];
+                            // var Student = StudentArray[0];
+                            //  NameLabel.Text = (String)Student["id"];
+                            //NameLabel.Text = jsonResponse;
+                        }
                     }
                 }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message.ToString());
+                    return false;
+                }
+
+
+            }
+
+            else
+            {
+                return false;
             }
 
         }
