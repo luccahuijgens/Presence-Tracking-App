@@ -22,10 +22,18 @@ namespace praticeApp.Views
             InitializeComponent();
             updateFeed();
         }
-
+    
         void updateFeed()
         {
-            List<FeedItem> combinedList= ServiceProvider.GetNotificationService().GetNotifications().Cast<FeedItem>().Concat(ServiceProvider.GetQuestionService().GetQuestions().Cast<FeedItem>()).ToList();
+            List<FeedItem> combinedList = new List<FeedItem>();
+            foreach (Question question in ServiceProvider.GetQuestionService().GetQuestions()) {
+                combinedList.Add(question);
+            }
+            foreach (Notification notification in ServiceProvider.GetNotificationService().GetNotifications())
+            {
+                combinedList.Add(notification);
+            }
+            combinedList=combinedList.OrderBy(x => x.Date).ToList();
             FeedList = new ObservableCollection<FeedItem>(combinedList);
             MyListView.ItemsSource = FeedList;
         }

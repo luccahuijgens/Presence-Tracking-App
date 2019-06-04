@@ -19,5 +19,9 @@ namespace praticeApp.Views
             questionSubject.Text = question.Subject;
             questionTags.Text = "dummy tags";
         }
+        private void SubmitBooleanButton(object sender, EventArgs args)
+        {
+            
+        }
     }
 }
