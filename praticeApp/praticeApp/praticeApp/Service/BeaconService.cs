@@ -82,9 +82,6 @@ namespace praticeApp.Service
                 // --> Start registration service
                 // --> Stop registration service
 
-                // -----> POST API CALL (YNC) Json with all beacons
-                // -----> Response: Registered/unregistred (classroom HL15-2.34)
-
                 // We want to kill the timer directly, so we return false. The timer will now stop.
                 return false;
             });
@@ -109,6 +106,7 @@ namespace praticeApp.Service
 
             //();
             _manager?.Stop();
+
             //RootWorkItem.Services.Remove(_service); // Cleanup the service...
 
             // --> Start registration service
@@ -121,6 +119,8 @@ namespace praticeApp.Service
             //return false;
            //});
         }
+
+
 
 
         private void StartScan()

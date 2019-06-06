@@ -14,6 +14,10 @@ using Plugin.Permissions.Abstractions;
 using System.Threading.Tasks;
 using praticeApp.Service;
 using praticeApp.Resources;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using praticeApp.Domain;
+using static praticeApp.Domain.BeaconJSON;
 
 namespace praticeApp.Views
 {
@@ -80,12 +84,34 @@ namespace praticeApp.Views
             if (beacons.Count > 0)
             {
                 String str = "Er zijn " + beacons.Count + " beacons gevonden:\n";
+                BeaconJSON beaconInJson = new BeaconJSON();
 
                 foreach (Beacon b in beacons)
                 {
+                    beaconInJson.Add(GetBeaconUUID(b), b.Rssi);
+
                     str += " - " + GetBeaconUUID(b);
+                    str += " RSSI: " + b.Rssi.ToString();
                     str += "\n";
                 }
+
+                
+
+                try
+                {
+                    String json = beaconInJson.ParseJson();
+                    Debug.WriteLine(json.Length);
+                    Debug.Write(json);
+
+                }
+                catch (JsonException ex)
+                {
+                    Debug.WriteLine("JsonConvert error: " + ex.ToString());
+                }
+               
+                
+ 
+
 
                 //await DisplayAlert("Succes!", str, "OK");
                 beaconsText.Text = str;
