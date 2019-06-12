@@ -1,4 +1,5 @@
-﻿using System;
+﻿using praticeApp.Service;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -18,9 +19,9 @@ namespace praticeApp.DataAccess
                 webRequest.Method = "GET";
                 webRequest.Timeout = 12000;
                 webRequest.ContentType = "application/json";
-                webRequest.Headers.Add("X-API-KEY", "459KrmhgSItMD0xBPX2KnThfsjUQXEMsh44P6YVu");
+                webRequest.Headers.Add("Authorization", "Bearer " + ConfigService.getStudentToken());
                 return webRequest.GetResponse();
-            }
+                }
             else { return null; }
         }
     }
