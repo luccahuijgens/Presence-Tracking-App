@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
+using praticeApp.Service;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,8 +25,7 @@ namespace praticeApp.Views
         }
         public async void ScanAsync()
         {
-
-
+          
             var scanPage = new ZXingScannerPage();
             var animat = new Animation();
             scanPage.Animate("Qr", animat, 5, 100, null, null, null);
@@ -34,7 +35,11 @@ namespace praticeApp.Views
             {
                 // Stop scanning
                 scanPage.IsScanning = false;
-                // GetName(result.Text);
+
+                if (GetName(result.Text))
+                {
+                    ConfigService.writeStudentToken(result.Text);
+                }
                 Console.WriteLine("\n" + result.ToString() + "\n");
 
                 // Pop the page and show the result
@@ -46,7 +51,7 @@ namespace praticeApp.Views
 
 
         }
-        private Boolean GetName(String StudentID)
+        private Boolean GetName(String studentToken)
         {
             string url = "https://beacon.aattendance.nl/api/v2/students";
             var webRequest = System.Net.WebRequest.Create(url);
@@ -55,7 +60,7 @@ namespace praticeApp.Views
                 webRequest.Method = "GET";
                 webRequest.Timeout = 12000;
                 webRequest.ContentType = "application/json";
-                webRequest.Headers.Add("Authorization", "Bearer " + StudentID);
+                webRequest.Headers.Add("Authorization", "Bearer " + studentToken);
                 try
                 {
                     using (System.IO.Stream s = webRequest.GetResponse().GetResponseStream())
@@ -65,6 +70,7 @@ namespace praticeApp.Views
 
                             string jsonResponse = sr.ReadToEnd();
                             JObject jobject = JObject.Parse(jsonResponse);
+                            Console.WriteLine(jsonResponse);
                             return true;
                             //var StudentArray = jobject["object"];
                             // var Student = StudentArray[0];
