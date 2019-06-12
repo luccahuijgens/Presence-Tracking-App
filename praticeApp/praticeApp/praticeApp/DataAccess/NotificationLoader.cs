@@ -6,7 +6,7 @@ using praticeApp.Domain;
 
 namespace praticeApp.DataAccess
 {
-    public class NotificationLoader : BaseLoader
+    public class NotificationLoader : BaseLoader, INotificationLoader
     {
         public NotificationLoader() { }
 
@@ -18,7 +18,8 @@ namespace praticeApp.DataAccess
             string Content = (String)notification["attributes"]["content"];
             return new Notification {FeedItemType="Notification",ID = ID, Date = Date, Subject = Subject,Content=Content,Header=Content};
         }
-        public List<Notification> getNotifications()
+
+        public List<Notification> GetNotifications()
         {
             List<Notification> NotificationList = new List<Notification>();
             string url = "https://5cd16a84d4a78300147bea4c.mockapi.io/notifications";

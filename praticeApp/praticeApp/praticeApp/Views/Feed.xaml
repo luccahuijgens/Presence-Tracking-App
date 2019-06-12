@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:praticeApp.Views"
 			 x:Class="praticeApp.Views.Feed"
 			 Title="Feed">
+
     <StackLayout>
         <ListView x:Name="MyListView"
             ItemsSource="{Binding FeedList}"

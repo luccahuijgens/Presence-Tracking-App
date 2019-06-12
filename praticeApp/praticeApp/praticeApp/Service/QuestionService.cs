@@ -6,13 +6,13 @@ using praticeApp.Domain;
 
 namespace praticeApp.Service
 {
-    public static class QuestionService
+    public class QuestionService:IQuestionService
     {
-        private static QuestionLoader QuestionLoader = new QuestionLoader();
+        private IQuestionLoader QuestionLoader = new QuestionLoader();
 
-        public static List<Question> GetQuestions()
+        public List<Question> GetQuestions()
         {
-            return QuestionLoader.getQuestions();
+            return QuestionLoader.GetQuestions();
         }
     }
 }
