@@ -4,9 +4,11 @@
              x:Class="praticeApp.Views.BlueTooth">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Test hier de bluetooth"/>
-            <Button Text="Fire it up" Clicked="ActivateBluetooth"/>
+            <Label Text="Druk op de onderstaande button om de activatiemodus te activeren."/>
+            <Button Text="Activeer registratiemodus" Clicked="ActivateBluetooth"/>
             <Label x:Name="beaconsText" Margin="5, 5, 5, 5"/>
+          
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -26,12 +26,14 @@ namespace praticeApp.Views
     public partial class BlueTooth : ContentPage
     {
         private BeaconDiscovery _beaconDiscovery;
+        private YNCEndpoint _yncEndpoint;
 
         public BlueTooth()
         {
             InitializeComponent();
 
             _beaconDiscovery = new BeaconDiscovery();
+            _yncEndpoint = new YNCEndpoint("https://beacon.aattendance.nl/api/v2/", "459KrmhgSItMD0xBPX2KnThfsjUQXEMsh44P6YVu");
         }
             
         public async Task RequestPermissions()
@@ -86,34 +88,47 @@ namespace praticeApp.Views
                 String str = "Er zijn " + beacons.Count + " beacons gevonden:\n";
                 BeaconJSON beaconInJson = new BeaconJSON();
 
-                foreach (Beacon b in beacons)
+                /**foreach (Beacon b in beacons)
                 {
                     beaconInJson.Add(GetBeaconUUID(b), b.Rssi);
 
                     str += " - " + GetBeaconUUID(b);
                     str += " RSSI: " + b.Rssi.ToString();
                     str += "\n";
-                }
+                }**/
 
-                
-
+               
                 try
                 {
                     String json = beaconInJson.ParseJson();
-                    Debug.WriteLine(json.Length);
-                    Debug.Write(json);
+                    YNCEndpointStatus endpointStatus = await _yncEndpoint.AddBeaconRegistration(json);
+
+                    switch (endpointStatus)
+                    {
+                        case YNCEndpointStatus.OK:
+                            await DisplayAlert("Succes", "Geregistreerd!", "OK");
+                            break;
+                        case YNCEndpointStatus.AuthFailed:
+                            await DisplayAlert("Autorisatie fout", "Er is een autorisatie fout opgetreden. Probeer opnieuw te registreren.", "OK");
+                            break;
+                        case YNCEndpointStatus.AlreadyRegistered:
+                            await DisplayAlert("Registratie fout", "Je bent al registreert voor deze les!", "OK");
+                            break;
+                        case YNCEndpointStatus.UnexpectedHttpError:
+                            await DisplayAlert("Fout", "Er is een onbekende fout opgetreden! Probeer het later opnieuw.", "OK");
+                            break;
+                        default:
+                            break;
+                    }
 
                 }
                 catch (JsonException ex)
                 {
                     Debug.WriteLine("JsonConvert error: " + ex.ToString());
+                    await DisplayAlert("Fout", "Er is een onbekende fout opgetreden! Probeer het later opnieuw.", "OK");
                 }
-               
                 
- 
 
-
-                //await DisplayAlert("Succes!", str, "OK");
                 beaconsText.Text = str;
             }
 
