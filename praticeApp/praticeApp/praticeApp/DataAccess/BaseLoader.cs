@@ -19,7 +19,7 @@ namespace praticeApp.DataAccess
                 webRequest.Method = "GET";
                 webRequest.Timeout = 12000;
                 webRequest.ContentType = "application/json";
-                webRequest.Headers.Add("Authorization", "Bearer " + ConfigService.getStudentToken());
+                webRequest.Headers.Add("Authorization", "Bearer " + ConfigService.GetStudentToken());
                 return webRequest.GetResponse();
                 }
             else { return null; }

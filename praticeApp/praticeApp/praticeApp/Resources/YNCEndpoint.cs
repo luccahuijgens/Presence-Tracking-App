@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using praticeApp.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,6 +15,7 @@ namespace praticeApp.Resources
         UnexpectedHttpError,
         AlreadyRegistered,
         AuthFailed,
+        ConnectionFailed,
         OK
     }
 
@@ -22,35 +24,58 @@ namespace praticeApp.Resources
         protected HttpClient client;
         protected String baseUrl;
         protected bool _verboseMode;
+        private String _authToken;
 
-        public YNCEndpoint(String APIBaseUrl, String authToken, bool verboseMode = false)
+        public YNCEndpoint(String APIBaseUrl, bool verboseMode = false, String authToken = null)
         {
             _verboseMode = verboseMode;
+            _authToken = authToken;
 
             client = new HttpClient();
             baseUrl = APIBaseUrl.TrimEnd('\\', '/');
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
+
+            if (_authToken == null)
+            {
+                InjectAuthToken();
+            } else
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _authToken);
+            }
+                
         }
 
         public void SetAccessToken(String authToken)
         {
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
+            _authToken = authToken;
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _authToken);
         }
 
         public async Task<YNCEndpointStatus> AddBeaconRegistration(String jsonBeacons)
         {
-            HttpResponseMessage response = await PerformPOSTRequestJSON("/registration", jsonBeacons);
+            HttpResponseMessage response;
 
-            String responseContent = response.Content.ReadAsStringAsync().Result;
-            YNCEndpointStatus status = CheckAuthFailure(response);
+            try
+            {
+                response = await PerformPOSTRequestJSONWithToken("/registration", jsonBeacons);
 
-            if (_verboseMode)
-                Debug.WriteLine(responseContent);
+                String responseContent = response.Content.ReadAsStringAsync().Result;
+                YNCEndpointStatus status = CheckAuthFailure(response);
 
-            if (status != YNCEndpointStatus.OK) return status;
-           
-            return YNCEndpointStatus.OK;
+                if (_verboseMode)
+                    Debug.WriteLine(responseContent);
+
+                if (status != YNCEndpointStatus.OK) return status;
+
+                return YNCEndpointStatus.OK;
+            } catch (Exception ex)
+            {
+                if (_verboseMode)
+                    Debug.WriteLine(ex.Message);
+              
+
+                return YNCEndpointStatus.UnexpectedHttpError;
+            }
         }
 
         protected YNCEndpointStatus CheckAuthFailure(HttpResponseMessage response)
@@ -68,16 +93,37 @@ namespace praticeApp.Resources
             return YNCEndpointStatus.OK;
         }
 
-        protected async Task<HttpResponseMessage> PerformPOSTRequest(String endpoint, StringContent content)
+        protected bool InjectAuthToken()
         {
+            if (_authToken != null)
+                return true;
+
+            String token = new String(new char[] { });
+
+            if ((new ConfigAccess()).LoadConfigTokenOutFile(ref token))
+            {
+                SetAccessToken(token);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        protected async Task<HttpResponseMessage> PerformPOSTRequestWithToken(String endpoint, StringContent content)
+        {
+            InjectAuthToken();
+
             Uri uri = new Uri(baseUrl + endpoint);
             client.CancelPendingRequests();
 
             return await client.PostAsync(uri, content);
         }
 
-        protected async Task<HttpResponseMessage> PerformPOSTRequestJSON(String endpoint, String json)
+        protected async Task<HttpResponseMessage> PerformPOSTRequestJSONWithToken(String endpoint, String json)
         {
+            InjectAuthToken();
+
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             Uri uri = new Uri(baseUrl + endpoint);
             client.CancelPendingRequests();
@@ -88,6 +134,11 @@ namespace praticeApp.Resources
         public String GetBaseURL()
         {
             return baseUrl;
+        }
+
+        public bool IsAppRegistered()
+        {
+            return (_authToken != null && _authToken.Length > 0);
         }
     }
 }

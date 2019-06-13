@@ -17,6 +17,7 @@ using praticeApp.Resources;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using praticeApp.Domain;
+using praticeApp.DataAccess;
 using static praticeApp.Domain.BeaconJSON;
 
 namespace praticeApp.Views
@@ -25,15 +26,17 @@ namespace praticeApp.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class BlueTooth : ContentPage
     {
-        private BeaconDiscovery _beaconDiscovery;
-        private YNCEndpoint _yncEndpoint;
+        private BeaconDiscovery _beaconDiscovery = null;
+        //private YNCEndpoint _yncEndpoint = null;
+        
 
         public BlueTooth()
         {
             InitializeComponent();
 
+            String token = new String(new char[] { });
+            
             _beaconDiscovery = new BeaconDiscovery();
-            _yncEndpoint = new YNCEndpoint("https://beacon.aattendance.nl/api/v2/", "459KrmhgSItMD0xBPX2KnThfsjUQXEMsh44P6YVu", true);
         }
             
         public async Task RequestPermissions()
@@ -56,9 +59,14 @@ namespace praticeApp.Views
 
         public async void ActivateBluetooth(object sender, EventArgs e)
         {
+            if (_beaconDiscovery == null)
+                return;
+
             ((Button)sender).IsEnabled = false;
 
             await RequestPermissions();
+
+            ((Button)sender).Text += "...";
 
             try
             {
@@ -88,20 +96,28 @@ namespace praticeApp.Views
                 String str = "Er zijn " + beacons.Count + " beacons gevonden:\n";
                 BeaconJSON beaconInJson = new BeaconJSON();
 
-                /**foreach (Beacon b in beacons)
+                foreach (Beacon b in beacons)
                 {
                     beaconInJson.Add(GetBeaconUUID(b), b.Rssi);
 
                     str += " - " + GetBeaconUUID(b);
                     str += " RSSI: " + b.Rssi.ToString();
                     str += "\n";
-                }**/
+                }
 
-               
                 try
                 {
                     String json = beaconInJson.ParseJson();
-                    YNCEndpointStatus endpointStatus = await _yncEndpoint.AddBeaconRegistration(json);
+
+                    var yncEndpoint = RootWorkItem.Services.Get<YNCEndpoint>();
+
+                    if (yncEndpoint == null)
+                    {
+                        await DisplayAlert("Fout", "Er is een onbekende fout opgetreden! Probeer het later opnieuw.", "OK");
+                        return;
+                    }
+
+                    YNCEndpointStatus endpointStatus = await yncEndpoint.AddBeaconRegistration(json);
 
                     switch (endpointStatus)
                     {
@@ -132,7 +148,9 @@ namespace praticeApp.Views
                 beaconsText.Text = str;
             }
 
+            ((Button)sender).Text = ((Button) sender).Text.Replace("...", "");
             ((Button)sender).IsEnabled = true;
+
         }
 
         public String GetBeaconUUID(Beacon b)
