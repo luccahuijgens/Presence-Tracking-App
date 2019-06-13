@@ -39,7 +39,7 @@ namespace praticeApp.Views
 
                 if (GetName(result.Text))
                 {
-                    ConfigService.WriteStudentToken(result.Text);
+                    ServiceProvider.GetConfigService().WriteStudentToken(result.Text);
                 }
                 Debug.WriteLine("\nDumped token to file...\n");
 

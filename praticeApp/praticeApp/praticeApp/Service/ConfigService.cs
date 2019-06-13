@@ -6,11 +6,11 @@ using praticeApp.Domain;
 
 namespace praticeApp.Service
 {
-    public static class ConfigService
+    public class ConfigService
     {
-        private static ConfigAccess configLoader = new ConfigAccess();
+        private ConfigAccess configLoader = new ConfigAccess();
 
-        public static String GetStudentToken()
+        public String GetStudentToken()
         {
             String ret = new String(new char[] { });
 
@@ -19,7 +19,7 @@ namespace praticeApp.Service
             return ret;
         }
 
-        public static void WriteStudentToken(String token)
+        public void WriteStudentToken(String token)
         {
             configLoader.WriteConfigTokenInFile(token);
         }

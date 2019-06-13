@@ -7,6 +7,6 @@ namespace praticeApp.DataAccess
 {
     interface IQuestionLoader
     {
-        List<Question> GetQuestions();
+        List<Question> GetQuestions(String token);
     }
 }

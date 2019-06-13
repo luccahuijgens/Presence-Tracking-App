@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using praticeApp.Controller;
 using praticeApp.Domain;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -12,12 +13,18 @@ namespace praticeApp.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class QuestionDetail : ContentPage
     {
+        private Question question;
         public QuestionDetail(Question question)
         {
             InitializeComponent();
-            questionTitle.Text = question.Title;
-            questionSubject.Text = question.Subject;
-            questionTags.Text = "dummy tags";
+            QuestionDetailController.FillQuestionDetailPage(question, questionTitle, questionSubject, questionTags);
+            this.question = question;
+        }
+
+        public void SubmitBooleanButton(object sender, EventArgs args)
+        {
+            QuestionDetailController.SubmitQuestion(question,answer.IsToggled);
+
         }
     }
 }

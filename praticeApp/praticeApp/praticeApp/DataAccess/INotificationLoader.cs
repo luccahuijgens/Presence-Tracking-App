@@ -7,6 +7,6 @@ namespace praticeApp.DataAccess
 {
     interface INotificationLoader
     {
-        List<Notification> GetNotifications();
+        List<Notification> GetNotifications(string token);
     }
 }
