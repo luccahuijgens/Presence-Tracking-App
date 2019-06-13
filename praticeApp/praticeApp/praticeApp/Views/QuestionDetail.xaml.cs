@@ -23,7 +23,10 @@ namespace praticeApp.Views
 
         public void SubmitBooleanButton(object sender, EventArgs args)
         {
-            QuestionDetailController.SubmitQuestion(question,answer.IsToggled);
+            if (QuestionDetailController.SubmitQuestion(question, answer.IsToggled))
+            {
+                DisplayAlert("Success","Your answer has been succesfully submitted.","Awesome!");
+            }
 
         }
     }

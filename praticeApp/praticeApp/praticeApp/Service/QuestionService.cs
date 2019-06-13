@@ -10,16 +10,14 @@ namespace praticeApp.Service
     {
         private IQuestionLoader QuestionLoader = new QuestionLoader();
 
-        public List<Question> GetQuestions()
+        public List<Question> GetQuestions(string token)
         {
-            String token = ServiceProvider.GetConfigService().GetStudentToken();
             return QuestionLoader.GetQuestions(token);
         }
 
-        public bool SubmitQuestion(int questionId,int answerId)
+        public bool SubmitQuestion(int questionId,int answerId,string token)
         {
-            String token = ServiceProvider.GetConfigService().GetStudentToken();
-            return true;
+            return QuestionLoader.SubmitQuestion(questionId, answerId,token);
         }
     }
 }

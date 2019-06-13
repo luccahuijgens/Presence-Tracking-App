@@ -15,16 +15,19 @@ namespace praticeApp.Controller
             questionSubject.Text = question.Subject;
             questionTags.Text = "dummy tags";
         }
-        public static void SubmitQuestion(Question question,bool isAnswerYes)
+        public static bool SubmitQuestion(Question question,bool isAnswerYes)
         {
+            string token = ServiceProvider.GetConfigService().GetStudentToken();
+            bool submitSuccess=false;
             if (isAnswerYes)
             {
-                ServiceProvider.GetQuestionService().SubmitQuestion(question.ID, 1);
+                submitSuccess=ServiceProvider.GetQuestionService().SubmitQuestion(question.ID, 1,token);
             }
             else
             {
-                ServiceProvider.GetQuestionService().SubmitQuestion(question.ID, 2);
+                submitSuccess=ServiceProvider.GetQuestionService().SubmitQuestion(question.ID, 2,token);
             }
+            return submitSuccess;
 
         }
 

@@ -33,13 +33,14 @@ namespace praticeApp.Controller
         }
         public static ObservableCollection<FeedItem> updateFeed()
         {
+            string token = ServiceProvider.GetConfigService().GetStudentToken();
             ObservableCollection<FeedItem> FeedList = new ObservableCollection<FeedItem>();
             List<FeedItem> combinedList = new List<FeedItem>();
-            foreach (Question question in ServiceProvider.GetQuestionService().GetQuestions())
+            foreach (Question question in ServiceProvider.GetQuestionService().GetQuestions(token))
             {
                 combinedList.Add(question);
             }
-            foreach (Notification notification in ServiceProvider.GetNotificationService().GetNotifications())
+            foreach (Notification notification in ServiceProvider.GetNotificationService().GetNotifications(token))
             {
                 combinedList.Add(notification);
             }

@@ -10,9 +10,8 @@ namespace praticeApp.Service
     {
         private INotificationLoader NotificationLoader = new NotificationLoader();
 
-        public List<Notification> GetNotifications()
+        public List<Notification> GetNotifications(string token)
         {
-            string token = ServiceProvider.GetConfigService().GetStudentToken();
             return NotificationLoader.GetNotifications(token);
         }
     }

@@ -8,5 +8,6 @@ namespace praticeApp.DataAccess
     interface IQuestionLoader
     {
         List<Question> GetQuestions(String token);
+        bool SubmitQuestion(int questionId, int answerId, string token);
     }
 }
