@@ -19,40 +19,41 @@ namespace praticeApp.Resources
 
     class YNCEndpoint
     {
-        public HttpClient client;
+        protected HttpClient client;
         protected String baseUrl;
+        protected bool _verboseMode;
 
-        public YNCEndpoint(String APIBaseUrl, String authToken)
+        public YNCEndpoint(String APIBaseUrl, String authToken, bool verboseMode = false)
         {
+            _verboseMode = verboseMode;
+
             client = new HttpClient();
             baseUrl = APIBaseUrl.TrimEnd('\\', '/');
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
         }
 
+        public void SetAccessToken(String authToken)
+        {
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
+        }
+
         public async Task<YNCEndpointStatus> AddBeaconRegistration(String jsonBeacons)
         {
-
-            var content = new StringContent(jsonBeacons, Encoding.UTF8, "application/json");
-
-            //var task = Task.Factory.StartNew(() => { PerformPOSTRequest("/registration", content)} );
-            HttpResponseMessage response = await PerformPOSTRequest("/registration", content);
+            HttpResponseMessage response = await PerformPOSTRequestJSON("/registration", jsonBeacons);
 
             String responseContent = response.Content.ReadAsStringAsync().Result;
-            YNCEndpointStatus status = CheckYNCResponse(response);
+            YNCEndpointStatus status = CheckAuthFailure(response);
+
+            if (_verboseMode)
+                Debug.WriteLine(responseContent);
 
             if (status != YNCEndpointStatus.OK) return status;
-
-
-            Debug.WriteLine(responseContent);
            
-
             return YNCEndpointStatus.OK;
         }
 
-
-
-        private YNCEndpointStatus CheckYNCResponse(HttpResponseMessage response)
+        protected YNCEndpointStatus CheckAuthFailure(HttpResponseMessage response)
         {
             if (!response.IsSuccessStatusCode)
             {
@@ -67,20 +68,26 @@ namespace praticeApp.Resources
             return YNCEndpointStatus.OK;
         }
 
-       
-
         protected async Task<HttpResponseMessage> PerformPOSTRequest(String endpoint, StringContent content)
         {
             Uri uri = new Uri(baseUrl + endpoint);
             client.CancelPendingRequests();
-            //var uri = new Uri(baseUrl + "/registration");
-            //var content = new StringContent(jsonBeacons, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = null;
+            return await client.PostAsync(uri, content);
+        }
 
-            response = await client.PostAsync(uri, content);
+        protected async Task<HttpResponseMessage> PerformPOSTRequestJSON(String endpoint, String json)
+        {
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            Uri uri = new Uri(baseUrl + endpoint);
+            client.CancelPendingRequests();
 
-            return response;
+            return await client.PostAsync(uri, content);
+        }
+
+        public String GetBaseURL()
+        {
+            return baseUrl;
         }
     }
 }

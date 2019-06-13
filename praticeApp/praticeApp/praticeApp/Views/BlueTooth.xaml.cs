@@ -33,7 +33,7 @@ namespace praticeApp.Views
             InitializeComponent();
 
             _beaconDiscovery = new BeaconDiscovery();
-            _yncEndpoint = new YNCEndpoint("https://beacon.aattendance.nl/api/v2/", "459KrmhgSItMD0xBPX2KnThfsjUQXEMsh44P6YVu");
+            _yncEndpoint = new YNCEndpoint("https://beacon.aattendance.nl/api/v2/", "459KrmhgSItMD0xBPX2KnThfsjUQXEMsh44P6YVu", true);
         }
             
         public async Task RequestPermissions()
