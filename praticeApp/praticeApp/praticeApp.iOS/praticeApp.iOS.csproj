@@ -180,4 +180,7 @@
       <Name>praticeApp</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Config\" />
+  </ItemGroup>
 </Project>

@@ -6,7 +6,7 @@ using praticeApp.Domain;
 
 namespace praticeApp.DataAccess
 {
-    public class QuestionLoader : BaseLoader
+    public class QuestionLoader : BaseLoader, IQuestionLoader
     {
         public QuestionLoader() { }
 
@@ -19,7 +19,7 @@ namespace praticeApp.DataAccess
             List<String> Tags = new List<string>();
             return new Question {FeedItemType="Question", ID = ID, Tags=Tags, Subject = Subject, Title = Title, QuestionType=QuestionType,Header=Title };
         }
-        public List<Question> getQuestions()
+        public List<Question> GetQuestions()
         {
             List<Question> QuestionList = new List<Question>();
             string url = "https://5cd16a84d4a78300147bea4c.mockapi.io/questions";
