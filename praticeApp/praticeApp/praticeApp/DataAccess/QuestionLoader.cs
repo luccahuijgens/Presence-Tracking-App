@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using praticeApp.Domain;
@@ -20,6 +23,34 @@ namespace praticeApp.DataAccess
             List<String> Tags = new List<string>();
             return new Question { FeedItemType = "Question", ID = ID, Tags = Tags, Subject = Subject, Title = Title, QuestionType = QuestionType, Header = Title, Date = Date };
         }
+
+        public async System.Threading.Tasks.Task<bool> submitQuestion(int questionId,int answerId)
+        {
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    var values = new Dictionary<string, string>
+                    {
+                        { "answer_possibility_id", answerId.ToString() }
+                    };
+
+                    var content = new FormUrlEncodedContent(values);
+
+                    var response = await client.PostAsync("https://beacon.aattendance.nl/api/v2/event-questions/"+questionId, content);
+
+                    var responseString = await response.Content.ReadAsStringAsync();
+                    return true;
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return false;
+            }
+
+        }
+
         public List<Question> GetQuestions()
         {
             List<Question> QuestionList = new List<Question>();

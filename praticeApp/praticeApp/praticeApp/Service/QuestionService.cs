@@ -14,5 +14,10 @@ namespace praticeApp.Service
         {
             return QuestionLoader.GetQuestions();
         }
+
+        public bool submitQuestion(int questionId,int answerId)
+        {
+            return QuestionLoader.submitQuestion(questionId, answerId).Result;
+        }
     }
 }

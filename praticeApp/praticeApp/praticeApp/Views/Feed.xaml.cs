@@ -34,6 +34,7 @@ namespace praticeApp.Views
                 combinedList.Add(notification);
             }
             combinedList=combinedList.OrderBy(x => x.Date).ToList();
+            combinedList.Reverse();
             FeedList = new ObservableCollection<FeedItem>(combinedList);
             MyListView.ItemsSource = FeedList;
         }
