@@ -27,6 +27,10 @@ namespace praticeApp.Views
             {
                 DisplayAlert("Success", "Your answer has been succesfully submitted.", "Awesome!");
             }
+            else
+            {
+                DisplayAlert("Error", "Something went wrong. Your answer was not submitted.", "Ok");
+            }
 
         }
     }
