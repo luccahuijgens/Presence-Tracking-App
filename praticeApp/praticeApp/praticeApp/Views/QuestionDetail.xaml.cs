@@ -17,7 +17,7 @@ namespace praticeApp.Views
         public QuestionDetail(Question question)
         {
             InitializeComponent();
-            QuestionDetailController.FillQuestionDetailPage(question, questionTitle, questionSubject, questionTags);
+            QuestionDetailController.FillQuestionDetailPage(question, questionTitle, questionSubject, questionDate);
             this.question = question;
         }
 
@@ -25,7 +25,7 @@ namespace praticeApp.Views
         {
             if (QuestionDetailController.SubmitQuestion(question, answer.IsToggled))
             {
-                DisplayAlert("Success","Your answer has been succesfully submitted.","Awesome!");
+                DisplayAlert("Success", "Your answer has been succesfully submitted.", "Awesome!");
             }
 
         }
