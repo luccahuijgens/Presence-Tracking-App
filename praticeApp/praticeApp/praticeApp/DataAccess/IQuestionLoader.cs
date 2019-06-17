@@ -7,8 +7,7 @@ namespace praticeApp.DataAccess
 {
     interface IQuestionLoader
     {
-        List<Question> GetQuestions();
-
-        System.Threading.Tasks.Task<bool> submitQuestion(int questionId,int answerId);
+        List<Question> GetQuestions(String token);
+        bool SubmitQuestion(int questionId, int answerId, string token);
     }
 }

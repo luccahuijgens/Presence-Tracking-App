@@ -6,13 +6,13 @@ using praticeApp.Domain;
 
 namespace praticeApp.Service
 {
-    public class NotificationService : INotificationService
+    public class NotificationService
     {
         private INotificationLoader NotificationLoader = new NotificationLoader();
 
-        public List<Notification> GetNotifications()
+        public List<Notification> GetNotifications(string token)
         {
-            return NotificationLoader.GetNotifications();
+            return NotificationLoader.GetNotifications(token);
         }
     }
 }

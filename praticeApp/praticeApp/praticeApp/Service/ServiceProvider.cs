@@ -6,16 +6,21 @@ namespace praticeApp.Service
 {
     public static class ServiceProvider
     {
-        static INotificationService NotificationService=new NotificationService();
-        static IQuestionService QuestionService = new QuestionService();
+        static NotificationService NotificationService=new NotificationService();
+        static QuestionService QuestionService = new QuestionService();
+        static ConfigService ConfigService = new ConfigService();
 
-        public static INotificationService GetNotificationService()
+        public static NotificationService GetNotificationService()
         {
             return NotificationService;
         }
-        public static IQuestionService GetQuestionService()
+        public static QuestionService GetQuestionService()
         {
             return QuestionService;
+        }
+        public static ConfigService GetConfigService()
+        {
+            return ConfigService;
         }
     }
 }

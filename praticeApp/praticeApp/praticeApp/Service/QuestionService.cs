@@ -6,13 +6,18 @@ using praticeApp.Domain;
 
 namespace praticeApp.Service
 {
-    public class QuestionService:IQuestionService
+    public class QuestionService
     {
         private IQuestionLoader QuestionLoader = new QuestionLoader();
 
-        public List<Question> GetQuestions()
+        public List<Question> GetQuestions(string token)
         {
-            return QuestionLoader.GetQuestions();
+            return QuestionLoader.GetQuestions(token);
+        }
+
+        public bool SubmitQuestion(int questionId,int answerId,string token)
+        {
+            return QuestionLoader.SubmitQuestion(questionId, answerId,token);
         }
 
         public bool submitQuestion(int questionId,int answerId)

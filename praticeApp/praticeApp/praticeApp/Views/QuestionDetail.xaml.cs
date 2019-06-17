@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using praticeApp.Service;
+using praticeApp.Controller;
 using praticeApp.Domain;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -17,21 +17,17 @@ namespace praticeApp.Views
         public QuestionDetail(Question question)
         {
             InitializeComponent();
+            QuestionDetailController.FillQuestionDetailPage(question, questionTitle, questionSubject, questionTags);
             this.question = question;
-            questionTitle.Text = question.Title;
-            questionSubject.Text = question.Subject;
-            questionTags.Text = "dummy tags";
         }
-        private void SubmitBooleanButton(object sender, EventArgs args)
+
+        public void SubmitBooleanButton(object sender, EventArgs args)
         {
-            if(answer.IsToggled)
+            if (QuestionDetailController.SubmitQuestion(question, answer.IsToggled))
             {
-                ServiceProvider.GetQuestionService().submitQuestion(question.ID,1);
+                DisplayAlert("Success","Your answer has been succesfully submitted.","Awesome!");
             }
-            else {
-                ServiceProvider.GetQuestionService().submitQuestion(question.ID, 2);
-            }
-            
+
         }
     }
 }

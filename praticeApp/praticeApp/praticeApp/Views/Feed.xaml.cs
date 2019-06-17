@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using praticeApp.Controller;
 using praticeApp.Domain;
 using praticeApp.Service;
 using Xamarin.Forms;
@@ -21,38 +22,18 @@ namespace praticeApp.Views
         {
             InitializeComponent();
             updateFeed();
+            MyListView.ItemsSource = FeedList;
         }
-    
+
         void updateFeed()
         {
-            List<FeedItem> combinedList = new List<FeedItem>();
-            foreach (Question question in ServiceProvider.GetQuestionService().GetQuestions()) {
-                combinedList.Add(question);
-            }
-            foreach (Notification notification in ServiceProvider.GetNotificationService().GetNotifications())
-            {
-                combinedList.Add(notification);
-            }
-            combinedList=combinedList.OrderBy(x => x.Date).ToList();
-            combinedList.Reverse();
-            FeedList = new ObservableCollection<FeedItem>(combinedList);
-            MyListView.ItemsSource = FeedList;
+            FeedList = FeedController.updateFeed();
         }
 
         private void ItemTapped(object sender, ItemTappedEventArgs e)
         {
-            FeedItem feedItem = (FeedItem)((ListView)sender).SelectedItem;
-            if (feedItem.GetType()==typeof(Notification))
-            {
-                Notification tappedNotification = (Notification)feedItem;
-                var newPage = new NotificationDetail(tappedNotification);
-                Navigation.PushAsync(newPage);
-            }else if (feedItem.GetType() == typeof(Question))
-            {
-                Question tappedQuestion = (Question)feedItem;
-                var newPage = new QuestionDetail(tappedQuestion);
-                Navigation.PushAsync(newPage);
-            }
+            Page displayPage = FeedController.ItemTapped(sender, e);
+            Navigation.PushAsync(displayPage);
         }
         private void UpdateFeedButton(object sender, EventArgs args)
         {
