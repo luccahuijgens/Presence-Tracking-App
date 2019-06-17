@@ -8,5 +8,6 @@ namespace praticeApp.Service
    public interface IQuestionService
     {
         List<Question> GetQuestions();
+        bool submitQuestion(int questionId, int answerId);
     }
 }
