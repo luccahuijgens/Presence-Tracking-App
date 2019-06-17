@@ -8,16 +8,20 @@ namespace praticeApp.Service
 {
     public static class ConfigService
     {
-        private static ConfigAcces configloader = new ConfigAcces();
+        private static ConfigAccess configLoader = new ConfigAccess();
 
-        public static String getStudentToken()
+        public static String GetStudentToken()
         {
-            return configloader.loadConfigTokenOutFile();
+            String ret = new String(new char[] { });
+
+            configLoader.LoadConfigTokenOutFile(ref ret);
+
+            return ret;
         }
 
-        public static void writeStudentToken(String token)
+        public static void WriteStudentToken(String token)
         {
-            configloader.writeConfigTokenInFile(token);
+            configLoader.WriteConfigTokenInFile(token);
         }
 
     }

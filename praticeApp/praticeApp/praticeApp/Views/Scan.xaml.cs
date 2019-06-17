@@ -2,6 +2,7 @@
 using praticeApp.Service;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -38,14 +39,14 @@ namespace praticeApp.Views
 
                 if (GetName(result.Text))
                 {
-                    ConfigService.writeStudentToken(result.Text);
+                    ConfigService.WriteStudentToken(result.Text);
                 }
-                Console.WriteLine("\n" + result.ToString() + "\n");
+                Debug.WriteLine("\nDumped token to file...\n");
 
                 // Pop the page and show the result
                 Device.BeginInvokeOnMainThread(() =>
                 {
-                        Navigation.PopAsync();
+                    Navigation.PopAsync();
                 });
             };
 

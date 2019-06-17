@@ -25,7 +25,7 @@ namespace praticeApp.Views
 
         void updateFeed()
         {
-            List<FeedItem> combinedList= ServiceProvider.GetNotificationService().GetNotifications().Cast<FeedItem>().Concat(ServiceProvider.GetQuestionService().GetQuestions().Cast<FeedItem>()).ToList();
+            List<FeedItem> combinedList =  ServiceProvider.GetNotificationService().GetNotifications().Cast<FeedItem>().Concat(ServiceProvider.GetQuestionService().GetQuestions().Cast<FeedItem>()).ToList();
             FeedList = new ObservableCollection<FeedItem>(combinedList);
             MyListView.ItemsSource = FeedList;
         }

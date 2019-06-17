@@ -2,6 +2,9 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using praticeApp.Views;
+using OpenNETCF.IoC;
+using praticeApp.Resources;
+using praticeApp.DataAccess;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace praticeApp
@@ -11,8 +14,12 @@ namespace praticeApp
         public App()
         {
             InitializeComponent();
-            
+
+            String token = new String(new char[] { });
+
+            RootWorkItem.Services.Add<YNCEndpoint>(new YNCEndpoint("https://beacon.aattendance.nl/api/v2/", true));
             MainPage = new NavigationPage(new NavMaster());
+
         }
 
         protected override void OnStart()

@@ -10,10 +10,11 @@ using OpenNETCF.IoC;
 using UniversalBeacon.Library.Core.Interfaces;
 using UniversalBeacon.Library;
 using Plugin.CurrentActivity;
+using Android.Bluetooth;
 
 namespace praticeApp.Droid
 {
-    [Activity(Label = "praticeApp", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "Attendance", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle savedInstanceState)
@@ -32,6 +33,11 @@ namespace praticeApp.Droid
             }
 
             CrossCurrentActivity.Current.Init(Application);
+
+            if (!BluetoothAdapter.DefaultAdapter.IsEnabled)
+            {
+                BluetoothAdapter.DefaultAdapter.Enable();
+            }
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, Permission[] grantResults)
         {
