@@ -15,19 +15,12 @@ namespace praticeApp.Controller
     class ScanController
     {
 
-        public static ZXingScannerPage BuildScannerpage()
-        {
-            var scanPage = new ZXingScannerPage();
-            var animat = new Animation();
-            scanPage.Animate("Qr", animat, 5, 100, null, null, null);
-            return (scanPage);
-        }
+        public static Boolean ProcessResult(String token)
+        { 
 
-        public static Boolean ProcessResult(ZXing.Result scanResult)
-        {
-            if (!ServiceProvider.GetStudentService().GetStudentNameWithToken(scanResult.Text).Equals(null))
+            if (ServiceProvider.GetStudentService().GetStudentNameWithToken(token) != null)
             {
-                ServiceProvider.GetConfigService().WriteStudentToken(scanResult.Text);
+                ServiceProvider.GetConfigService().WriteStudentToken(token);
                 Debug.WriteLine("\nDumped token to file...\n");
                 return (true);
             }

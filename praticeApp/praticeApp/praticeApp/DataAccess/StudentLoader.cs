@@ -1,6 +1,9 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
 using System.Text;
 
 namespace praticeApp.DataAccess
@@ -13,44 +16,29 @@ namespace praticeApp.DataAccess
 
         public String GetStudentNameWithToken(String token)
         {
+       
             String studentName = null;
-            string url = "https://beacon.aattendance.nl/api/v2/students";
-            var webRequest = System.Net.WebRequest.Create(url);
-            if (webRequest != null)
+            try
             {
-                webRequest.Method = "GET";
-                webRequest.Timeout = 12000;
-                webRequest.ContentType = "application/json";
-                webRequest.Headers.Add("Authorization", "Bearer " + token);
-                try
-                {
-                    using (System.IO.Stream s = webRequest.GetResponse().GetResponseStream())
-                    {
-                        using (System.IO.StreamReader sr = new System.IO.StreamReader(s))
-                        {
+                string url = "https://beacon.aattendance.nl/api/v2/students";
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "GET";
+                request.Headers.Add("Authorization", "Bearer " + token);
+                request.ContentType = "application/json";
+                var response = (HttpWebResponse)request.GetResponse();
+                var responseString = new StreamReader(response.GetResponseStream());
+                string jsonResponse = responseString.ReadToEnd();
+                
+                JObject jobject = JObject.Parse(jsonResponse);
+                var studentArray = jobject["data"];
+                var student = studentArray[0];
+                return ((String)student["attributes"]["name"]);
 
-                            string jsonResponse = sr.ReadToEnd();
-                            JObject jobject = JObject.Parse(jsonResponse);
-                            var StudentArray = jobject["object"];
-                            var Student = StudentArray[0];
-                            return((String)Student["name"]);
-          
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message.ToString());
-                    return studentName;
-                }
             }
-
-            else
+            catch (Exception e)
             {
                 return studentName;
             }
-
         }
-
     }
 }
