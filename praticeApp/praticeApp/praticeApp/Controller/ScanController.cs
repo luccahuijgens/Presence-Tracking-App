@@ -23,11 +23,12 @@ namespace praticeApp.Controller
             return (scanPage);
         }
 
-        public static Boolean ProcessResult(ZXing.Result scanResult)
-        {
-            if (!ServiceProvider.GetStudentService().GetStudentNameWithToken(scanResult.Text).Equals(null))
+        public static Boolean ProcessResult(String token)
+        { 
+
+            if (ServiceProvider.GetStudentService().GetStudentNameWithToken(token) != null)
             {
-                ServiceProvider.GetConfigService().WriteStudentToken(scanResult.Text);
+                ServiceProvider.GetConfigService().WriteStudentToken(token);
                 Debug.WriteLine("\nDumped token to file...\n");
                 return (true);
             }

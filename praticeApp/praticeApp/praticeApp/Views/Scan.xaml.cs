@@ -11,22 +11,23 @@ namespace praticeApp.Views
 {
     public partial class Scan : ContentPage
     {
-        public ZXingScannerPage scannerPage;
-
+      
 
         public Scan()
         {
             InitializeComponent();
-            scannerPage = ScanController.BuildScannerpage();
-            ScanAsync(scannerPage);
+            ScanAsync();
         }
 
-        public async void ScanAsync(ZXingScannerPage scannerPage)
+        public async void ScanAsync()
         {
-            await Navigation.PushAsync(scannerPage);
+            ZXingScannerPage scannerPage = ScanController.BuildScannerpage();
+            scannerPage.IsScanning = true;
             scannerPage.OnScanResult += (result) =>
             {
-                if (ScanController.ProcessResult(result)){
+         
+
+                if (ScanController.ProcessResult(result.Text)){
                     scannerPage.IsScanning = false;
                     Debug.WriteLine("\nScans Succeed...\n");
                     Device.BeginInvokeOnMainThread(() =>
@@ -41,6 +42,8 @@ namespace praticeApp.Views
                 }
 
             };
+
+            await Navigation.PushAsync(scannerPage);
         }
     }
 }
