@@ -26,6 +26,9 @@ namespace praticeApp.Domain
 
         public void Add(String UUID, short RSSI)
         {
+            if (UUID.Length == 0)
+                return;
+
             BeaconJSONEntry entry = new BeaconJSONEntry();
 
             entry.RSSI = RSSI;

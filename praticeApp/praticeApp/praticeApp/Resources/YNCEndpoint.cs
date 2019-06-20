@@ -63,6 +63,7 @@ namespace praticeApp.Resources
                 YNCEndpointStatus status = CheckAuthFailure(response);
 
                 if (_verboseMode)
+                    Debug.WriteLine("JSON request: " + jsonBeacons);
                     Debug.WriteLine("Token: " + _authToken);
                     Debug.WriteLine(responseContent);
 
