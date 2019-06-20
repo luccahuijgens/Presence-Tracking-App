@@ -35,7 +35,7 @@ namespace praticeApp.Views
                         await DisplayAlert("Succes~!", "Je account is succesvol gekoppeld", "Begrepen.");
                     });
 
-                    Application.Current.MainPage = new NavigationPage(new NavMaster());
+                    App.Current.MainPage = new NavigationPage(new NavMaster());
 
 
                 }

@@ -24,7 +24,7 @@ namespace praticeApp.Droid
 
             base.OnCreate(savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
-            LoadApplication(new Application());
+            LoadApplication(new App());
             var provider = RootWorkItem.Services.Get<IBluetoothPacketProvider>();
             if (provider == null)
             {
