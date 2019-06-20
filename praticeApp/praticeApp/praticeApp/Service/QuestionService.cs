@@ -19,5 +19,10 @@ namespace praticeApp.Service
         {
             return QuestionLoader.SubmitQuestion(questionId, answerId,token);
         }
+
+        public bool submitQuestion(int questionId,int answerId, string token)
+        {
+            return QuestionLoader.SubmitQuestion(questionId, answerId, token);
+        }
     }
 }

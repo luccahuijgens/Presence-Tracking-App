@@ -8,7 +8,7 @@ namespace praticeApp.Service
 {
     public class ConfigService
     {
-        private ConfigAccess configLoader = new ConfigAccess();
+        private ConfigLoader configLoader = new ConfigLoader();
 
         public String GetStudentToken()
         {

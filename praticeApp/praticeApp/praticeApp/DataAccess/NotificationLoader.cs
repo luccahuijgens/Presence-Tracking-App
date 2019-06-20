@@ -29,18 +29,37 @@ namespace praticeApp.DataAccess
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
             request.Headers.Add("Authorization", "Bearer " + token);
-            request.ContentType = "application/json";
+            //request.ContentType = "application/json";
+            request.Accept = "application/json";
 
-            var response = (HttpWebResponse)request.GetResponse();
-            var responseString = new StreamReader(response.GetResponseStream());
-            string jsonResponse = responseString.ReadToEnd();
-            JObject Notificationobject = JObject.Parse(jsonResponse);
-            foreach (JObject Notification in Notificationobject["data"].Children())
+            try
             {
-                Notification notobject = convertJson(Notification);
-                NotificationList.Add(notobject);
+                var response = (HttpWebResponse)request.GetResponse();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return NotificationList;
+
+                var responseString = new StreamReader(response.GetResponseStream());
+                string jsonResponse = responseString.ReadToEnd();
+                JObject Notificationobject = JObject.Parse(jsonResponse);
+                foreach (JObject Notification in Notificationobject["data"].Children())
+                {
+                    Notification notobject = convertJson(Notification);
+                    NotificationList.Add(notobject);
+                }
+                return NotificationList;
+            } catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+
+                return NotificationList;
             }
-            return NotificationList;
+
+            
+
+            
+
+            
         }
     }
 }

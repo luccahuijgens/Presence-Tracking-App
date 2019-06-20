@@ -25,19 +25,13 @@ namespace praticeApp.Views
 
         protected override void OnAppearing()
         {
-            try
-            {
-                updateFeed();
-                MyListView.ItemsSource = FeedList;
-            }catch(Exception e) {
-                DisplayAlert("Login Required","You need to be logged in to view your feed.","Ok");
-            }
+            updateFeed();
+            MyListView.ItemsSource = FeedList;
         }
 
         void updateFeed()
         {
-            updateFeed();
-            MyListView.ItemsSource = FeedList;
+            FeedList = FeedController.updateFeed();
         }
 
         private void ItemTapped(object sender, ItemTappedEventArgs e)

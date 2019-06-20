@@ -9,6 +9,7 @@ namespace praticeApp.Service
         static NotificationService NotificationService=new NotificationService();
         static QuestionService QuestionService = new QuestionService();
         static ConfigService ConfigService = new ConfigService();
+        static StudentService StudentService = new StudentService();
 
         public static NotificationService GetNotificationService()
         {
@@ -21,6 +22,11 @@ namespace praticeApp.Service
         public static ConfigService GetConfigService()
         {
             return ConfigService;
+        }
+
+        public static StudentService GetStudentService()
+        {
+            return StudentService;
         }
     }
 }

@@ -63,6 +63,7 @@ namespace praticeApp.Resources
                 YNCEndpointStatus status = CheckAuthFailure(response);
 
                 if (_verboseMode)
+                    Debug.WriteLine("Token: " + _authToken);
                     Debug.WriteLine(responseContent);
 
                 if (status != YNCEndpointStatus.OK) return status;
@@ -100,7 +101,7 @@ namespace praticeApp.Resources
 
             String token = new String(new char[] { });
 
-            if ((new ConfigAccess()).LoadConfigTokenOutFile(ref token))
+            if ((new ConfigLoader()).LoadConfigTokenOutFile(ref token))
             {
                 SetAccessToken(token);
 

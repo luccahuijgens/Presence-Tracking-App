@@ -66,23 +66,37 @@ namespace praticeApp.DataAccess
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
             request.Headers.Add("Authorization", "Bearer " + token);
-            request.ContentType = "application/json";
+            request.Accept = "application/json";
+            //request.ContentType = "application/json";
 
-            var response = (HttpWebResponse)request.GetResponse();
-            var responseString = new StreamReader(response.GetResponseStream());
-            string jsonResponse = responseString.ReadToEnd();
-            JObject Questionobject = JObject.Parse(jsonResponse);
-            JArray eventData = (JArray)Questionobject["included"];
-            foreach (JObject Question in Questionobject["data"].Children())
+            try
             {
-                int eventId = (int)Question["relationships"]["event"]["data"]["id"];
-                String eventDate = getDateStringFromEvent(eventData, eventId);
-                String eventName = getNameFromEvent(eventData, eventId);
-                Dictionary<String, int> possibleAnswers = getAnswersFromQuestions((JArray)Question["attributes"]["answer_possibilities"]);
-                Question notobject = convertJson(Question, eventName, eventDate, possibleAnswers);
-                QuestionList.Add(notobject);
+                var response = (HttpWebResponse)request.GetResponse();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return QuestionList;
+
+                var responseString = new StreamReader(response.GetResponseStream());
+                string jsonResponse = responseString.ReadToEnd();
+                JObject Questionobject = JObject.Parse(jsonResponse);
+                JArray eventData = (JArray)Questionobject["included"];
+                foreach (JObject Question in Questionobject["data"].Children())
+                {
+                    int eventId = (int)Question["relationships"]["event"]["data"]["id"];
+                    String eventDate = getDateStringFromEvent(eventData, eventId);
+                    String eventName = getNameFromEvent(eventData, eventId);
+                    Dictionary<String, int> possibleAnswers = getAnswersFromQuestions((JArray)Question["attributes"]["answer_possibilities"]);
+                    Question notobject = convertJson(Question, eventName, eventDate, possibleAnswers);
+                    QuestionList.Add(notobject);
+                }
+                return QuestionList;
+            } catch
+            {
+                return QuestionList;
             }
-            return QuestionList;
+
+
+           
         }
 
         public bool SubmitQuestion(int questionId, int answerId, string token)
