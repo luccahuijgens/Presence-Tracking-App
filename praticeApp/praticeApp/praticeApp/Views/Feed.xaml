@@ -7,7 +7,6 @@
 
     <StackLayout>
         <ListView x:Name="MyListView"
-            ItemsSource="{Binding FeedList}"
             ItemTapped="ItemTapped"
             CachingStrategy="RecycleElement"
             HasUnevenRows = "True"

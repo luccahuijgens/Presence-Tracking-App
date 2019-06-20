@@ -21,13 +21,23 @@ namespace praticeApp.Views
         public Feed()
         {
             InitializeComponent();
-            updateFeed();
-            MyListView.ItemsSource = FeedList;
+        }
+
+        protected override void OnAppearing()
+        {
+            try
+            {
+                updateFeed();
+                MyListView.ItemsSource = FeedList;
+            }catch(Exception e) {
+                DisplayAlert("Login Required","You need to be logged in to view your feed.","Ok");
+            }
         }
 
         void updateFeed()
         {
-            FeedList = FeedController.updateFeed();
+            updateFeed();
+            MyListView.ItemsSource = FeedList;
         }
 
         private void ItemTapped(object sender, ItemTappedEventArgs e)
