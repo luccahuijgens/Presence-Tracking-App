@@ -10,10 +10,10 @@
             <StackLayout Margin="0,15,0,0" Grid.Row="1" Orientation="Horizontal" Spacing="0">
                 <Label FontSize="20" TextColor="#303030" Font="Bold" x:Name="questionSubject" />
             </StackLayout>
-            <Label BackgroundColor="DarkGray" TextColor="White" FontSize="14" Margin="0,5,0,0" x:Name="questionTags"></Label>
+            <Label Margin="0,4,0,0" FontSize="10" x:Name="questionDate" />
 
             <StackLayout Margin="0,5,0,0">
-                <Label Text="This is an example of question detail content"></Label>
+                <Label Text="Please flip the switch on when you agree or leave it grey when you disagree."></Label>
             </StackLayout>
             <StackLayout Orientation="Horizontal" Margin="0,20,0,0" Spacing="0" IsVisible="{Binding ReportMode}">
                 <Label Text="Agree?" FontSize="16" VerticalOptions="Center" />
