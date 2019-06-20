@@ -5,11 +5,11 @@ using System.Text;
 
 namespace praticeApp.DataAccess
 {
-    class ConfigAccess
+    class ConfigLoader
     {
         private readonly String filename;
 
-        public ConfigAccess()
+        public ConfigLoader()
         {
             this.filename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "config.txt");
         }

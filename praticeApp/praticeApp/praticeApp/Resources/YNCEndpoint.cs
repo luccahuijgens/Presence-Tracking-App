@@ -100,7 +100,7 @@ namespace praticeApp.Resources
 
             String token = new String(new char[] { });
 
-            if ((new ConfigAccess()).LoadConfigTokenOutFile(ref token))
+            if ((new ConfigLoader()).LoadConfigTokenOutFile(ref token))
             {
                 SetAccessToken(token);
 

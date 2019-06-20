@@ -48,7 +48,7 @@ namespace praticeApp.DataAccess
             return QuestionList;
         }
 
-        public bool SubmitQuestion(int questionId, int answerId,string token)
+        public bool SubmitQuestion(int questionId, int answerId, string token)
         {
             try
             {
