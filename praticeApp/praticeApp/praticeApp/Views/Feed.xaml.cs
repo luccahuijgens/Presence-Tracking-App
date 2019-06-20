@@ -21,6 +21,10 @@ namespace praticeApp.Views
         public Feed()
         {
             InitializeComponent();
+        }
+
+        protected override void OnAppearing()
+        {
             updateFeed();
             MyListView.ItemsSource = FeedList;
         }

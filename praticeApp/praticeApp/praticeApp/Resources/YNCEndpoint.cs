@@ -63,6 +63,7 @@ namespace praticeApp.Resources
                 YNCEndpointStatus status = CheckAuthFailure(response);
 
                 if (_verboseMode)
+                    Debug.WriteLine("Token: " + _authToken);
                     Debug.WriteLine(responseContent);
 
                 if (status != YNCEndpointStatus.OK) return status;
