@@ -15,22 +15,54 @@ namespace praticeApp.DataAccess
     {
         public QuestionLoader() { }
 
-        private Question convertJson(JObject question)
+        private Question convertJson(JObject question, String eventName, String eventDate, Dictionary<String, int> possibleAnswers)
         {
             int ID = (int)question["id"]; ;
-            string Subject = (String)question["attributes"]["subject"];
-            DateTime Date = DateTime.Parse((String)question["attributes"]["date"]);
-            string Title = (String)question["title"];
-            string QuestionType = (String)question["type"];
-            List<String> Tags = new List<string>();
-            return new Question { FeedItemType = "Question", ID = ID, Tags = Tags, Subject = Subject, Title = Title, QuestionType = QuestionType, Header = Title, Date = Date };
+            string Subject = eventName;
+            DateTime Date = DateTime.Parse(eventDate);
+            string Title = (String)question["attributes"]["question"];
+            string QuestionType = (String)question["attributes"]["question_type"];
+            return new Question { FeedItemType = "Question", ID = ID, PossibleAnswers = possibleAnswers, Subject = Subject, Title = Title, QuestionType = QuestionType, Header = Title, Date = Date };
+        }
+
+        private String getDateStringFromEvent(JArray eventData, int eventId)
+        {
+            foreach (JObject Event in eventData.Children())
+            {
+                if ((int)Event["id"] == eventId)
+                {
+                    return (String)Event["attributes"]["starttime"];
+                }
+            }
+            return null;
+        }
+
+        private String getNameFromEvent(JArray eventData, int eventId)
+        {
+            foreach (JObject Event in eventData.Children())
+            {
+                if ((int)Event["id"] == eventId)
+                {
+                    return (String)Event["attributes"]["name"];
+                }
+            }
+            return "";
+        }
+
+        private Dictionary<String, int> getAnswersFromQuestions(JArray answers)
+        {
+            Dictionary<String, int> possibleAnswers = new Dictionary<String, int>();
+            foreach (JObject Answer in answers)
+            {
+                possibleAnswers.Add((String)Answer["answer"], (int)Answer["id"]);
+            }
+            return possibleAnswers;
         }
 
         public List<Question> GetQuestions(String token)
         {
             List<Question> QuestionList = new List<Question>();
-            //string url = "https://beacon.aattendance.nl/api/v2/event-questions/";
-            string url = "https://5cd16a84d4a78300147bea4c.mockapi.io/questions";
+            string url = "https://beacon.aattendance.nl/api/v2/event-questions/";
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
             request.Headers.Add("Authorization", "Bearer " + token);
@@ -39,12 +71,17 @@ namespace praticeApp.DataAccess
             var response = (HttpWebResponse)request.GetResponse();
             var responseString = new StreamReader(response.GetResponseStream());
             string jsonResponse = responseString.ReadToEnd();
-                        JArray Questionarray = JArray.Parse(jsonResponse);
-                        foreach (JObject Question in Questionarray.Children<JObject>())
-                        {
-                        Question notobject = convertJson(Question);
-                            QuestionList.Add(notobject);
-                        }
+            JObject Questionobject = JObject.Parse(jsonResponse);
+            JArray eventData = (JArray)Questionobject["included"];
+            foreach (JObject Question in Questionobject["data"].Children())
+            {
+                int eventId = (int)Question["relationships"]["event"]["data"]["id"];
+                String eventDate = getDateStringFromEvent(eventData, eventId);
+                String eventName = getNameFromEvent(eventData, eventId);
+                Dictionary<String, int> possibleAnswers = getAnswersFromQuestions((JArray)Question["attributes"]["answer_possibilities"]);
+                Question notobject = convertJson(Question, eventName, eventDate, possibleAnswers);
+                QuestionList.Add(notobject);
+            }
             return QuestionList;
         }
 
@@ -54,24 +91,24 @@ namespace praticeApp.DataAccess
             {
                 var request = (HttpWebRequest)WebRequest.Create("https://beacon.aattendance.nl/api/v2/event-questions/" + questionId);
 
-                var postData = "answer_possibility_id=" + answerId;
-                var data = Encoding.ASCII.GetBytes(postData);
 
                 request.Method = "POST";
                 request.Headers.Add("Authorization", "Bearer " + token);
                 request.ContentType = "application/json";
-                request.ContentLength = data.Length;
 
-                using (var stream = request.GetRequestStream())
+                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
                 {
-                    stream.Write(data, 0, data.Length);
+                    string json = "{\"answer_possibility_id\":"+answerId+"}";
+
+                    streamWriter.Write(json);
                 }
 
                 var response = (HttpWebResponse)request.GetResponse();
 
                 var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
                 return true;
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 return false;
             }

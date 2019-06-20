@@ -9,23 +9,26 @@ namespace praticeApp.Controller
 {
     class QuestionDetailController
     {
-        public static void FillQuestionDetailPage(Question question, Label questionTitle, Label questionSubject, Label questionTags)
+        public static void FillQuestionDetailPage(Question question, Label questionTitle, Label questionLesson, Label questionDate)
         {
             questionTitle.Text = question.Title;
-            questionSubject.Text = question.Subject;
-            questionTags.Text = "dummy tags";
+            questionLesson.Text = question.Subject;
+            questionDate.Text = question.dateToString();
+
         }
-        public static bool SubmitQuestion(Question question,bool isAnswerYes)
+        public static bool SubmitQuestion(Question question, bool isAnswerYes)
         {
             string token = ServiceProvider.GetConfigService().GetStudentToken();
-            bool submitSuccess=false;
+            bool submitSuccess = false;
             if (isAnswerYes)
             {
-                submitSuccess=ServiceProvider.GetQuestionService().SubmitQuestion(question.ID, 1,token);
+                KeyValuePair<string, int> pair = new KeyValuePair<string, int>("agree", question.PossibleAnswers["agree"]);
+                submitSuccess = ServiceProvider.GetQuestionService().SubmitQuestion(question.ID, pair.Value, token);
             }
             else
             {
-                submitSuccess=ServiceProvider.GetQuestionService().SubmitQuestion(question.ID, 2,token);
+                KeyValuePair<string, int> pair = new KeyValuePair<string, int>("disagree", question.PossibleAnswers["disagree"]);
+                submitSuccess = ServiceProvider.GetQuestionService().SubmitQuestion(question.ID, pair.Value, token);
             }
             return submitSuccess;
 
