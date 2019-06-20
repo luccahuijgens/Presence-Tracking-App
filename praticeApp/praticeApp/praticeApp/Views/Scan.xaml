@@ -4,8 +4,6 @@
              x:Class="praticeApp.Views.Scan">
     <ContentPage.Content>
         <StackLayout>
-            <Button BackgroundColor="#00a98c" TextColor="White" Text="Scan" Clicked="OnClickScan"></Button>
-            <Label x:Name="NameLabel" Text="InitialText" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
