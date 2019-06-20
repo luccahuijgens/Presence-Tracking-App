@@ -7,7 +7,9 @@ namespace praticeApp.DataAccess
 {
     class ConfigLoader
     {
-        private readonly String filename;
+        private String filename;
+        private String jsonBody;
+
 
         public ConfigLoader()
         {
