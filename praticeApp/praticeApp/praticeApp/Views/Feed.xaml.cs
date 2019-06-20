@@ -25,13 +25,17 @@ namespace praticeApp.Views
 
         protected override void OnAppearing()
         {
-            updateFeed();
-            MyListView.ItemsSource = FeedList;
+            showFeed();
         }
 
-        void updateFeed()
+        void showFeed()
         {
             FeedList = FeedController.updateFeed();
+            if (FeedList.Any())
+            {
+                MyListView.ItemsSource = FeedList;
+                emptyLabel.IsVisible = false;
+            }
         }
 
         private void ItemTapped(object sender, ItemTappedEventArgs e)
@@ -41,7 +45,7 @@ namespace praticeApp.Views
         }
         private void UpdateFeedButton(object sender, EventArgs args)
         {
-            updateFeed();
+            showFeed();
         }
     }
 }
