@@ -37,6 +37,7 @@ namespace praticeApp.DataAccess
             }
             catch (Exception e)
             {
+                Debug.WriteLine("HTTPWebRequest exception: " + e.ToString());
                 return studentName;
             }
         }
