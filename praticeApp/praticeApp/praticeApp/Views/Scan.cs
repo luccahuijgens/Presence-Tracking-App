@@ -39,7 +39,6 @@ namespace praticeApp.Views
                     }
                     else
                     {
-
                         Debug.WriteLine("\nScanfailded...\n");
                         scanTries = (scanTries + 1);
                         overlay.TopText = "Poging: " + scanTries;
