@@ -26,6 +26,8 @@ namespace praticeApp.Droid
 		
 		public static void UpdateIdValues()
 		{
+			global::UniversalBeacon.Library.Resource.String.ApplicationName = global::praticeApp.Droid.Resource.String.ApplicationName;
+			global::UniversalBeacon.Library.Resource.String.Hello = global::praticeApp.Droid.Resource.String.Hello;
 			global::Xamarin.Forms.Platform.Android.Resource.Animation.abc_fade_in = global::praticeApp.Droid.Resource.Animation.abc_fade_in;
 			global::Xamarin.Forms.Platform.Android.Resource.Animation.abc_fade_out = global::praticeApp.Droid.Resource.Animation.abc_fade_out;
 			global::Xamarin.Forms.Platform.Android.Resource.Animation.abc_grow_fade_in_from_bottom = global::praticeApp.Droid.Resource.Animation.abc_grow_fade_in_from_bottom;
@@ -6009,12 +6011,6 @@ namespace praticeApp.Droid
 			// aapt resource value: 0x7f030000
 			public const int icon = 2130903040;
 			
-			// aapt resource value: 0x7f030001
-			public const int icon_round = 2130903041;
-			
-			// aapt resource value: 0x7f030002
-			public const int launcher_foreground = 2130903042;
-			
 			static Mipmap()
 			{
 				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
@@ -6027,6 +6023,12 @@ namespace praticeApp.Droid
 		
 		public partial class String
 		{
+			
+			// aapt resource value: 0x7f08003e
+			public const int ApplicationName = 2131230782;
+			
+			// aapt resource value: 0x7f08003d
+			public const int Hello = 2131230781;
 			
 			// aapt resource value: 0x7f080016
 			public const int abc_action_bar_home_description = 2131230742;
