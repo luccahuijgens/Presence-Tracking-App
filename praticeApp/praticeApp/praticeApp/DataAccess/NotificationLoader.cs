@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using praticeApp.Domain;
 
@@ -25,22 +28,31 @@ namespace praticeApp.DataAccess
         public List<Notification> GetNotifications(String token)
         {
             List<Notification> NotificationList = new List<Notification>();
-            string url = "https://beacon.aattendance.nl/api/v2/notifications";
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "GET";
-            request.Headers.Add("Authorization", "Bearer " + token);
-            request.ContentType = "application/json";
-
-            var response = (HttpWebResponse)request.GetResponse();
-            var responseString = new StreamReader(response.GetResponseStream());
-            string jsonResponse = responseString.ReadToEnd();
-            JObject Notificationobject = JObject.Parse(jsonResponse);
-            foreach (JObject Notification in Notificationobject["data"].Children())
+            try
             {
-                Notification notobject = convertJson(Notification);
-                NotificationList.Add(notobject);
+                var httpClient = new HttpClient();
+                string url = "https://beacon.aattendance.nl/api/v2/notifications";
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage response = httpClient.GetAsync(url).Result;
+                if (response.StatusCode != HttpStatusCode.OK)
+                    return NotificationList;
+
+                string jsonResponse = response.Content.ReadAsStringAsync().Result;
+                Debug.WriteLine("Converting");
+                JObject Notificationobject = JObject.Parse(jsonResponse);
+                foreach (JObject Notification in Notificationobject["data"].Children())
+                {
+                    Notification notobject = convertJson(Notification);
+                    NotificationList.Add(notobject);
+                }
+            }catch(Exception e)
+            {
+                Debug.WriteLine("Notifications failed.");
+                Debug.WriteLine(e.ToString());
             }
-            return NotificationList;
-        }
+                return NotificationList;
+            }
     }
 }
