@@ -91,9 +91,8 @@ namespace praticeApp.Resources
         {
             if (!response.IsSuccessStatusCode)
             {
-                if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                     return YNCEndpointStatus.AuthFailed;
-              
 
                 if (response.StatusCode == (System.Net.HttpStatusCode) 422)
                     return YNCEndpointStatus.NoYNCBeaconsFound;
