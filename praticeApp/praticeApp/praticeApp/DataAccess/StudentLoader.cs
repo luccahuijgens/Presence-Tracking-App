@@ -30,10 +30,9 @@ namespace praticeApp.DataAccess
                 string jsonResponse = responseString.ReadToEnd();
                 
                 JObject jobject = JObject.Parse(jsonResponse);
-                var StudentArray = jobject["data"];
-                var Student = StudentArray[0];
-               
-                return ((String)Student["id"]);
+                var studentArray = jobject["data"];
+                var student = studentArray[0];
+                return ((String)student["attributes"]["name"]);
 
             }
             catch (Exception e)

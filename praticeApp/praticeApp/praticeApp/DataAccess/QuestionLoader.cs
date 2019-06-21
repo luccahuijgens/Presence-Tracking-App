@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
@@ -62,22 +63,21 @@ namespace praticeApp.DataAccess
         public List<Question> GetQuestions(String token)
         {
             List<Question> QuestionList = new List<Question>();
-            string url = "https://beacon.aattendance.nl/api/v2/event-questions/";
-            var request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "GET";
-            request.Headers.Add("Authorization", "Bearer " + token);
-            request.Accept = "application/json";
-            //request.ContentType = "application/json";
-
             try
             {
-                var response = (HttpWebResponse)request.GetResponse();
+                var httpClient = new HttpClient();
+                string url = "https://beacon.aattendance.nl/api/v2/event-questions";
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
+                HttpResponseMessage response = httpClient.GetAsync(url).Result;
                 if (response.StatusCode != HttpStatusCode.OK)
                     return QuestionList;
 
-                var responseString = new StreamReader(response.GetResponseStream());
-                string jsonResponse = responseString.ReadToEnd();
+                string jsonResponse = response.Content.ReadAsStringAsync().Result;
+
+                Debug.WriteLine(jsonResponse);
+
                 JObject Questionobject = JObject.Parse(jsonResponse);
                 JArray eventData = (JArray)Questionobject["included"];
                 foreach (JObject Question in Questionobject["data"].Children())
@@ -89,37 +89,25 @@ namespace praticeApp.DataAccess
                     Question notobject = convertJson(Question, eventName, eventDate, possibleAnswers);
                     QuestionList.Add(notobject);
                 }
-                return QuestionList;
-            } catch
+            }catch(Exception e)
             {
-                return QuestionList;
+                Debug.WriteLine("Questions failed.");
+                Debug.WriteLine(e.ToString());
             }
-
-
-           
+                return QuestionList;          
         }
 
         public bool SubmitQuestion(int questionId, int answerId, string token)
         {
             try
             {
-                var request = (HttpWebRequest)WebRequest.Create("https://beacon.aattendance.nl/api/v2/event-questions/" + questionId);
+                var httpClient = new HttpClient();
+                var url="https://beacon.aattendance.nl/api/v2/event-questions/" + questionId;
+                var content = new StringContent("{\"answer_possibility_id\":" + answerId + "}", Encoding.UTF8, "application/json");
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-
-                request.Method = "POST";
-                request.Headers.Add("Authorization", "Bearer " + token);
-                request.ContentType = "application/json";
-
-                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-                {
-                    string json = "{\"answer_possibility_id\":"+answerId+"}";
-
-                    streamWriter.Write(json);
-                }
-
-                var response = (HttpWebResponse)request.GetResponse();
-
-                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                HttpResponseMessage response = httpClient.PostAsync(url, content).Result;
                 return true;
             }
             catch (Exception e)

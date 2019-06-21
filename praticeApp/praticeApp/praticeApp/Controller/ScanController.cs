@@ -15,14 +15,6 @@ namespace praticeApp.Controller
     class ScanController
     {
 
-        public static ZXingScannerPage BuildScannerpage()
-        {
-            var scanPage = new ZXingScannerPage();
-            var animat = new Animation();
-            scanPage.Animate("Qr", animat, 5, 100, null, null, null);
-            return (scanPage);
-        }
-
         public static Boolean ProcessResult(String token)
         { 
 

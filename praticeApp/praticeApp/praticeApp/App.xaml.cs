@@ -9,7 +9,7 @@ using praticeApp.DataAccess;
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace praticeApp
 {
-    public partial class App : Application
+    public partial class App : Xamarin.Forms.Application
     {
         public App()
         {
