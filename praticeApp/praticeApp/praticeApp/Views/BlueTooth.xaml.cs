@@ -124,6 +124,9 @@ namespace praticeApp.Views
                         case YNCEndpointStatus.OK:
                             await DisplayAlert("Succes", "Geregistreerd!", "OK");
                             break;
+                        case YNCEndpointStatus.NoYNCBeaconsFound:
+                            await DisplayAlert("Fout", "Er zijn geen beacons van Academy Attendance gevonden!", "OK");
+                            break;
                         case YNCEndpointStatus.AuthFailed:
                             await DisplayAlert("Autorisatie fout", "Er is een autorisatie fout opgetreden. Probeer opnieuw te registreren.", "OK");
                             break;

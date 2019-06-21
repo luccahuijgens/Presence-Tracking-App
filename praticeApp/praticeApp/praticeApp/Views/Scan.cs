@@ -30,12 +30,7 @@ namespace praticeApp.Views
                     if (ScanController.ProcessResult(result.Text))
                     {
                         Debug.WriteLine("\nScans Succeed...\n");
-                        Device.BeginInvokeOnMainThread(async () =>
-                        {
-                            await DisplayAlert("Succes~!", "Je account is succesvol gekoppeld", "Begrepen.");
-                        });
-
-                        App.Current.MainPage = new NavigationPage(new NavMaster());
+                        break;
                     }
                     else
                     {
@@ -44,14 +39,27 @@ namespace praticeApp.Views
                         overlay.TopText = "Poging: " + scanTries;
                     }
                 }
-                
+
+                if (scanTries <= 5)
+                {
                     Device.BeginInvokeOnMainThread(async () =>
                     {
-                        await DisplayAlert("Fout~!", "Je account kan niet worden gekoppeld, controleer je internetverbinding of probeer het later opnieuw.", "Begrepen.");
+                        await DisplayAlert("Succes~!", "Je account is succesvol gekoppeld", "Begrepen.");
                     });
-                
+                }
+                else
+                {
+                    Device.BeginInvokeOnMainThread(async () =>
+                        {
+                            await DisplayAlert("Fout~!", "Je account kan niet worden gekoppeld, controleer je internetverbinding of probeer het later opnieuw.", "Begrepen.");
+                        });
+                }
+                zxing.IsScanning = false;
+                scanTries = 0;
+                App.Current.MainPage = new NavigationPage(new NavMaster());
 
-};
+
+            };
             overlay = new ZXingDefaultOverlay
             {
                 TopText = "Poging: " + scanTries,

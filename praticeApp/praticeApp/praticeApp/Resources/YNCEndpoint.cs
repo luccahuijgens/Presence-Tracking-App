@@ -16,6 +16,7 @@ namespace praticeApp.Resources
         AlreadyRegistered,
         AuthFailed,
         ConnectionFailed,
+        NoYNCBeaconsFound,
         OK
     }
 
@@ -29,18 +30,22 @@ namespace praticeApp.Resources
         public YNCEndpoint(String APIBaseUrl, bool verboseMode = false, String authToken = null)
         {
             _verboseMode = verboseMode;
-            _authToken = authToken;
 
+            // Create a new http client.
             client = new HttpClient();
             baseUrl = APIBaseUrl.TrimEnd('\\', '/');
+
+            // API only accepts application/json
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-            if (_authToken == null)
+            if (authToken == null)
             {
+                // If access token has not been set manually, try to do it automatically.
                 InjectAuthToken();
             } else
             {
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _authToken);
+                // Set API access token.
+                SetAccessToken(authToken);
             }
                 
         }
@@ -48,6 +53,8 @@ namespace praticeApp.Resources
         public void SetAccessToken(String authToken)
         {
             _authToken = authToken;
+
+            // Set auth header
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _authToken);
         }
 
@@ -63,6 +70,7 @@ namespace praticeApp.Resources
                 YNCEndpointStatus status = CheckAuthFailure(response);
 
                 if (_verboseMode)
+                    Debug.WriteLine("JSON request: " + jsonBeacons);
                     Debug.WriteLine("Token: " + _authToken);
                     Debug.WriteLine(responseContent);
 
@@ -83,10 +91,11 @@ namespace praticeApp.Resources
         {
             if (!response.IsSuccessStatusCode)
             {
-                if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
-                {
+                if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
                     return YNCEndpointStatus.AuthFailed;
-                }
+
+                if (response.StatusCode == (System.Net.HttpStatusCode) 422)
+                    return YNCEndpointStatus.NoYNCBeaconsFound;
 
                 return YNCEndpointStatus.UnexpectedHttpError;
             }
@@ -113,8 +122,6 @@ namespace praticeApp.Resources
 
         protected async Task<HttpResponseMessage> PerformPOSTRequestWithToken(String endpoint, StringContent content)
         {
-            InjectAuthToken();
-
             Uri uri = new Uri(baseUrl + endpoint);
             client.CancelPendingRequests();
 
@@ -123,8 +130,6 @@ namespace praticeApp.Resources
 
         protected async Task<HttpResponseMessage> PerformPOSTRequestJSONWithToken(String endpoint, String json)
         {
-            InjectAuthToken();
-
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             Uri uri = new Uri(baseUrl + endpoint);
             client.CancelPendingRequests();
