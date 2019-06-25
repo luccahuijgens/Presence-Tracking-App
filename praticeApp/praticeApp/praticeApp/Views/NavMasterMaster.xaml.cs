@@ -38,35 +38,9 @@ namespace praticeApp.Views
                         new NavMasterMenuItem { Id = 0, Title = "Start", TargetType=(typeof (NavMasterDetail))},
                         new NavMasterMenuItem { Id = 1, Title = "App koppelen", TargetType=(typeof (Scan))},
                         new NavMasterMenuItem { Id = 2, Title = "Feed", TargetType=(typeof (Feed))},
-                        new NavMasterMenuItem { Id = 3, Title = "Registratie", TargetType=(typeof (BlueTooth))},
-                        new NavMasterMenuItem { Id = 4, Title = "Tracking", TargetType=(typeof (Tracking))}
-
+                        new NavMasterMenuItem { Id = 3, Title = "Aanwezigheid", TargetType=(typeof (BlueTooth))}
                     });
             }
-
-            /**public void GenerateMenuItems()
-            {
-                var ync = RootWorkItem.Services.Get<YNCEndpoint>();
-
-                if (ync != null && !ync.IsAppRegistered())
-                {
-                    MenuItems = new ObservableCollection<NavMasterMenuItem>(new[]
-                    {
-                        new NavMasterMenuItem { Id = 0, Title = "Home", TargetType=(typeof (NavMasterDetail))},
-                        new NavMasterMenuItem { Id = 1, Title = "Qr-scan", TargetType=(typeof (Scan))}
-                    });
-                }
-                else
-                {
-                    MenuItems = new ObservableCollection<NavMasterMenuItem>(new[]
-                    {
-                        new NavMasterMenuItem { Id = 0, Title = "Home", TargetType=(typeof (NavMasterDetail))},
-                        new NavMasterMenuItem { Id = 1, Title = "Qr-scan", TargetType=(typeof (Scan))},
-                        new NavMasterMenuItem { Id = 2, Title = "Feed", TargetType=(typeof (Feed))},
-                        new NavMasterMenuItem { Id = 3, Title = "BlueTooth", TargetType=(typeof (BlueTooth))},
-                    });
-                }
-            }**/
 
             #region INotifyPropertyChanged Implementation
             public event PropertyChangedEventHandler PropertyChanged;

@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using praticeApp.Service;
+using OpenNETCF.IoC;
 
 namespace praticeApp.Controller
 {
@@ -22,12 +23,12 @@ namespace praticeApp.Controller
             {
                 ServiceProvider.GetConfigService().WriteStudentToken(token);
                 Debug.WriteLine("\nDumped token to file...\n");
-                return (true);
+                return true;
             }
             else
             {
                 Debug.WriteLine("\nIncorrect toke....\n");
-                return (false);
+                return false;
             }
         }
     }

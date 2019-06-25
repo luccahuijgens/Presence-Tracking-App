@@ -29,12 +29,12 @@ namespace praticeApp.Views
                 {
                     if (ScanController.ProcessResult(result.Text))
                     {
-                        Debug.WriteLine("\nScans Succeed...\n");
+                        Debug.WriteLine("\nScan succeeded...\n");
                         break;
                     }
                     else
                     {
-                        Debug.WriteLine("\nScanfailded...\n");
+                        Debug.WriteLine("\nScan failed...\n");
                         scanTries = (scanTries + 1);
                         overlay.TopText = "Poging: " + scanTries;
                     }
@@ -44,14 +44,14 @@ namespace praticeApp.Views
                 {
                     Device.BeginInvokeOnMainThread(async () =>
                     {
-                        await DisplayAlert("Succes~!", "Je account is succesvol gekoppeld", "Begrepen.");
+                        await DisplayAlert("Succes!", "Je account is succesvol gekoppeld!", "OK");
                     });
                 }
                 else
                 {
                     Device.BeginInvokeOnMainThread(async () =>
                         {
-                            await DisplayAlert("Fout~!", "Je account kan niet worden gekoppeld, controleer je internetverbinding of probeer het later opnieuw.", "Begrepen.");
+                            await DisplayAlert("Fout!", "Je account kan niet worden gekoppeld, controleer je internetverbinding of probeer het later opnieuw.", "OK");
                         });
                 }
                 zxing.IsScanning = false;
@@ -63,7 +63,7 @@ namespace praticeApp.Views
             overlay = new ZXingDefaultOverlay
             {
                 TopText = "Poging: " + scanTries,
-                BottomText = "Even geduld a.u.b.",
+                BottomText = "Ga naar aattendance.nl -> App Koppelen",
                 ShowFlashButton = zxing.HasTorch,
             };
             overlay.FlashButtonClicked += (sender, e) => {

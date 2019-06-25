@@ -60,7 +60,8 @@ namespace praticeApp.Resources
 
         public void Disable()
         {
-            _service.Dispose();
+            if (_service != null)
+                _service.Dispose();
         }
        
         ~BeaconDiscovery()

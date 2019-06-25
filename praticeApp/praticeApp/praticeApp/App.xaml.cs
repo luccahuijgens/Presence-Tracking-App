@@ -20,7 +20,11 @@ namespace praticeApp
 
             String token = new String(new char[] { });
 
-            RootWorkItem.Services.Add<YNCEndpoint>(new YNCEndpoint("https://beacon.aattendance.nl/api/v2/", true));
+            if (!RootWorkItem.Services.Contains<YNCEndpoint>())
+            {
+                RootWorkItem.Services.Add<YNCEndpoint>(new YNCEndpoint("https://beacon.aattendance.nl/api/v2/", true));
+            }
+            
             MainPage = new NavigationPage(new NavMaster());
             BackgroundController bController = new BackgroundController();
             
