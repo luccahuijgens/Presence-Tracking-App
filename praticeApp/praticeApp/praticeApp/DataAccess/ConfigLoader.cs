@@ -1,54 +1,94 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
 namespace praticeApp.DataAccess
 {
-    class ConfigLoader
+    public class ConfigLoader
     {
         private String filename;
-        private String jsonBody;
-
 
         public ConfigLoader()
         {
+  
             this.filename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "config.txt");
-        }
-
-        public bool LoadConfigTokenOutFile(ref String token)
-        {
-            if (File.Exists(GetFileName()))
+            if (!CheckConfigFile())
             {
-                token = File.ReadAllText(GetFileName());
-                // token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjBjNjU5OGQ1MmJhYmI3YzQ1ZWU3NDAyNzg4YzNmNWFiY2I3OGJlNDMzMGQxNjZjMGQ0ZTY1MTVhODU4MjM0OWUzZjUwYmQwZjk5MDIzMjc2In0.eyJhdWQiOiIzIiwianRpIjoiMGM2NTk4ZDUyYmFiYjdjNDVlZTc0MDI3ODhjM2Y1YWJjYjc4YmU0MzMwZDE2NmMwZDRlNjUxNWE4NTgyMzQ5ZTNmNTBiZDBmOTkwMjMyNzYiLCJpYXQiOjE1NjEwMjE4NzIsIm5iZiI6MTU2MTAyMTg3MiwiZXhwIjoxNTkyNjQ0MjcyLCJzdWIiOiI4Iiwic2NvcGVzIjpbXX0.i_4P73LbxpvU8IyniGteeNy2fAYRXCBt-drh1C1-4TKhwmQRCQrTjuQ7AJcIIjKLxAJpbzrEcK6aZoLppJ3nSQ";
-                return true;
+                ResetToDefault();
             }
-
-            return false;
+        }
+        public String ReadConfigFile()
+        {
+            return (File.ReadAllText(GetConfigFilePathName()));
         }
 
-        /**public String LoadConfigTokenOutFile()
-        {
-            if (File.Exists(GetFileName()))
-            {
-                String token = File.ReadAllText(GetFileName());
-                return token;
-            }
-
-            return "";
-
-            //return "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjBjNjU5OGQ1MmJhYmI3YzQ1ZWU3NDAyNzg4YzNmNWFiY2I3OGJlNDMzMGQxNjZjMGQ0ZTY1MTVhODU4MjM0OWUzZjUwYmQwZjk5MDIzMjc2In0.eyJhdWQiOiIzIiwianRpIjoiMGM2NTk4ZDUyYmFiYjdjNDVlZTc0MDI3ODhjM2Y1YWJjYjc4YmU0MzMwZDE2NmMwZDRlNjUxNWE4NTgyMzQ5ZTNmNTBiZDBmOTkwMjMyNzYiLCJpYXQiOjE1NjEwMjE4NzIsIm5iZiI6MTU2MTAyMTg3MiwiZXhwIjoxNTkyNjQ0MjcyLCJzdWIiOiI4Iiwic2NvcGVzIjpbXX0.i_4P73LbxpvU8IyniGteeNy2fAYRXCBt-drh1C1-4TKhwmQRCQrTjuQ7AJcIIjKLxAJpbzrEcK6aZoLppJ3nSQ";
-        }**/
-
-        public void WriteConfigTokenInFile(String token)
-        {
-            File.WriteAllText(GetFileName(), token);
-        }
-
-        public String GetFileName()
+        public String GetConfigFilePathName()
         {
             return filename;
+        }
+
+        public Boolean UpdateConfigFile(String newJSONBody)
+        {
+            try
+            {
+                File.WriteAllText(GetConfigFilePathName(), newJSONBody);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("ConfigFile update action failed with: " + e.Message);
+                return false;
+            }
+        }
+
+        public Boolean DeleteConfigFile()
+        {
+            try
+            {
+                File.Delete(GetConfigFilePathName());
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("ConfigFile delete action failed with: " + e.Message);
+                return false;
+            }
+        }
+
+        public Boolean ResetToDefault()
+        {
+            JObject defaultConfigFile = new JObject();
+            defaultConfigFile.Add("token", "");
+            defaultConfigFile.Add("scanState", "false");
+            defaultConfigFile.Add("scanTime", "");
+            defaultConfigFile.Add("maxQRScans", "");
+            return (UpdateConfigFile(defaultConfigFile.ToString()));
+        }
+
+        public Boolean CheckConfigFile()
+        {
+            if (File.Exists(GetConfigFilePathName()))
+            {
+                Debug.WriteLine("Found ConfigFile....");
+                if (new FileInfo(GetConfigFilePathName()).Length == 0)
+                {
+                    Debug.WriteLine("Empty ConfigFile.");
+                    return false;
+                }
+                else
+                {
+                    Debug.WriteLine("ConfigFile valid!");
+                    return true;
+                }
+            }
+            else
+            {
+                Debug.WriteLine("No ConfigFile found.");
+                return false;
+            }
         }
     }
 }

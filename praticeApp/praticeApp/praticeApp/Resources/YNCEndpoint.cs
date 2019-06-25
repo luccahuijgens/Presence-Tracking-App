@@ -110,14 +110,15 @@ namespace praticeApp.Resources
 
             String token = new String(new char[] { });
 
-            if ((new ConfigLoader()).LoadConfigTokenOutFile(ref token))
+            if (ConfigFileReader.GetConfigFileLoader().CheckConfigFile())
             {
+                token = ConfigFileReader.GetToken();
                 SetAccessToken(token);
 
                 return true;
             }
 
-            return false;
+            return false;   
         }
 
         protected async Task<HttpResponseMessage> PerformPOSTRequestWithToken(String endpoint, StringContent content)
