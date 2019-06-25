@@ -2,14 +2,92 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="praticeApp.Views.BlueTooth"
-             Title="Registratie">
+             Title="Aanwezigheid">
     <ContentPage.Content>
-        <StackLayout>
-            <Label x:Name="statusLabel" Text="Druk op de onderstaande button om de activatiemodus te activeren."/>
-            <Button x:Name ="activateBtn" Text="Activeer registratiemodus" Clicked="ActivateBluetooth" BackgroundColor="#00a98c" TextColor="White" />
-            <Label x:Name="beaconsText" Margin="5, 5, 5, 5"/>
-          
-            
+        <StackLayout Margin="18">
+
+            <Label x:Name="noLessonRegLabel" FontSize="16" Text="Er zijn geen lessen bekend waar je de afgelopen twee dagen voor geregisteerd bent." IsVisible="true"></Label>
+            <ListView x:Name="EventsListView"
+                  ItemsSource="EventsListView"
+            CachingStrategy="RecycleElement"
+            HasUnevenRows = "True"
+            RowHeight = "-1"
+                      IsVisible="True">
+
+                <!--Built in Cells-->
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Padding="10,8,10,8" BackgroundColor="{Binding BackgroundColor}">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="8*"></ColumnDefinition>
+                                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+                                    <StackLayout Grid.Row="1" Grid.Column="0" Orientation="Horizontal" Spacing="0" HorizontalOptions="StartAndExpand">
+                                        <Label Margin ="0" Grid.Column="0"  FontSize="18" TextColor="{Binding TextColor}" Text="{Binding LessonName}" FontFamily="Arial"/>
+
+
+                                    </StackLayout>
+
+                                    <!-- Text = "{Binding LessonHasAttended}" "{Binding LessonName}" -->
+                                    <StackLayout Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="0" HorizontalOptions="StartAndExpand">
+                                        <Label x:Name="lbcopywrite" 
+                                        HorizontalTextAlignment="End"
+                                        Text = "{Binding LessonHasAttended}"
+                                        TextColor="{Binding TextColor}"
+                                        Grid.Column="1"
+                                        Style="{DynamicResource SmallLabel}"/>
+                                    </StackLayout>
+
+                                </Grid>
+
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="8*"></ColumnDefinition>
+                                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackLayout>
+                                        <Label Text="{Binding Teachers}" Font ="Bold" FontSize="14" FontFamily="Arial" Grid.Column="0" TextColor="{Binding TextColor}" />
+                                        <Label Text="{Binding Start}" LineBreakMode="TailTruncation" WidthRequest="50" FontSize="10" FontFamily="Arial" Grid.Column="0" TextColor="{Binding TextColor}" />
+                                        <Label Text="{Binding End}" LineBreakMode="TailTruncation" WidthRequest="50" FontSize="10" FontFamily="Arial" Grid.Column="0" TextColor="{Binding TextColor}" />
+                                    </StackLayout>
+                                </Grid>
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+            </ListView>
+
+            <Grid VerticalOptions="EndAndExpand" >
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="8*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <StackLayout HorizontalOptions="Fill">
+
+                    <Button HorizontalOptions="FillAndExpand" x:Name ="autoRegBtn" Text="Automatische registratie" Clicked="ActivateBluetooth" BackgroundColor="#00a98c" TextColor="White" />
+                    <Button HorizontalOptions="FillAndExpand" x:Name ="manualRegBtn" Text="Handmatige registratie" Clicked="ActivateBluetooth" BackgroundColor="#00a98c" TextColor="White" />
+
+                </StackLayout>    
+            </Grid>
+
+
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

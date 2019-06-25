@@ -18,7 +18,7 @@
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout BackgroundColor="White" Padding="10,8,10,8">
-                            <Label  Margin ="0" Text = "{Binding Subject}" FontSize="18" TextColor="#303030" FontFamily="Arial"/>
+                            <Label  Margin ="0" Text = "{Binding LessonS}" FontSize="18" TextColor="#303030" FontFamily="Arial"/>
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />

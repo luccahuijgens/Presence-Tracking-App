@@ -141,9 +141,6 @@ namespace praticeApp.Resources
 
         protected bool InjectAuthToken()
         {
-            if (_authToken != null)
-                return true;
-
             String token = new String(new char[] { });
 
             if ((new ConfigLoader()).LoadConfigTokenOutFile(ref token))
@@ -158,6 +155,7 @@ namespace praticeApp.Resources
 
         protected async Task<HttpResponseMessage> PerformPOSTRequestWithToken(String endpoint, StringContent content)
         {
+            InjectAuthToken();
             Uri uri = new Uri(baseUrl + endpoint);
             client.CancelPendingRequests();
 
@@ -166,6 +164,7 @@ namespace praticeApp.Resources
 
         protected async Task<HttpResponseMessage> PerformPOSTRequestJSONWithToken(String endpoint, String json)
         {
+            InjectAuthToken();
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             Uri uri = new Uri(baseUrl + endpoint);
             client.CancelPendingRequests();
@@ -175,6 +174,7 @@ namespace praticeApp.Resources
 
         protected async Task<HttpResponseMessage> PerformGETRequestJSONWithToken(String endpoint)
         {
+            InjectAuthToken();
             Uri uri = new Uri(baseUrl + endpoint);
             client.CancelPendingRequests();
 

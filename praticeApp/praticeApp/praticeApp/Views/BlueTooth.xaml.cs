@@ -20,6 +20,7 @@ using praticeApp.Domain;
 using praticeApp.DataAccess;
 using static praticeApp.Domain.BeaconJSON;
 using System.Data;
+using System.Linq;
 
 namespace praticeApp.Views
 {
@@ -43,6 +44,8 @@ namespace praticeApp.Views
         protected async override void OnAppearing()
         {
             await UpdateRegistrationEvents();
+
+            
         }
 
         public async Task UpdateRegistrationEvents()
@@ -57,27 +60,70 @@ namespace praticeApp.Views
 
             KeyValuePair<YNCEndpointStatus, Events> events = await yncEndpoint.GetStudentEvents();
 
-            if (events.Key == YNCEndpointStatus.OK && events.Value != null)
+
+            if (events.Key == YNCEndpointStatus.OK && events.Value != null && events.Value.data.Count > 0)
             {
                 // Update the events...
+                var currentTime = DateTime.Now;
 
-                Debug.WriteLine(events.Value.data.ToString());
+                //ObservableCollection<EventItem> EventList = new ObservableCollection<EventItem>();
+                List<EventItem> combinedList = new List<EventItem>();
 
-                Debug.WriteLine(events.Value.data.Count);
-                
-                if (events.Value.data.Count > 0)
+
+                foreach (var ev in events.Value.data)
                 {
-                    Debug.WriteLine(events.Value.data[0].id);
+                    //Debug.WriteLine(ev.attributes.name);
+                    //Debug.WriteLine(ev.attributes.lecturers);
+                    //Debug.WriteLine(ev.attributes.classrooms);
+                    //Debug.WriteLine(ev.attributes.attended);
+                    //Debug.WriteLine(ev.attributes.starttime);
+                    //Debug.WriteLine(ev.attributes.endtime);
+
+                    DateTime start = new DateTime();
+                    DateTime end = new DateTime();
+
+                    if (ev.attributes.GetStartTime(ref start) && ev.attributes.GetEndTime(ref end))
+                    {
+                        var timeSpan = currentTime - start;
+
+  
+                            //Debug.WriteLine(ev.attributes.name);
+                            //Debug.WriteLine(ev.attributes.lecturers);
+                            //Debug.WriteLine(start.ToString());
+                            //Debug.WriteLine(end.ToString());
+
+                        if (timeSpan.Days <= 7)
+                        {
+                            combinedList.Add(new EventItem { LessonName = ev.attributes.name, LessonHasAttended = (ev.attributes.attended) ? "AANWEZIG" : "AFWEZIG", Teachers = "Docent(en): " + ev.attributes.lecturers, Start = start, End = end, TextColor = (ev.attributes.attended) ? "Black" : "White", BackgroundColor = (ev.attributes.attended) ? "White" : "#ff5959" }); // #f24343
+                        }
+                    }
                 }
+
+                noLessonRegLabel.IsVisible = false;
+                EventsListView.IsVisible = true;
+
+                combinedList = combinedList.OrderBy(x => x.Start).ToList();
+                combinedList.Reverse();
+
+                EventsListView.ItemsSource = new ObservableCollection<EventItem>(combinedList);
             }
-        }
+            else
+            {
+                noLessonRegLabel.IsVisible = true;
+                EventsListView.IsVisible = false;
+            }
+
+                
+
+            }
 
         public async Task RequestPermissions()
         {
             await RequestLocationPermission();
-            PermissionStatus status = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+            PermissionStatus statusLoc = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.Location);
+            PermissionStatus statusLocInUse = await CrossPermissions.Current.CheckPermissionStatusAsync(Permission.LocationWhenInUse);
 
-            if (status != PermissionStatus.Granted)
+            if (statusLoc != PermissionStatus.Granted || statusLocInUse != PermissionStatus.Granted)
             {
                 await DisplayAlert("Fout", "Onvoldoende permissies, kan niet gebruik maken van locatie. Controlleer instellingen.", "OK");
             }
@@ -86,8 +132,9 @@ namespace praticeApp.Views
         private async Task RequestLocationPermission()
         {
             // Actually coarse location would be enough, the plug-in only provides a way to request fine location
-            var requestedPermissions = await CrossPermissions.Current.RequestPermissionsAsync(Plugin.Permissions.Abstractions.Permission.Location);
-            var requestedPermissionStatus = requestedPermissions[Plugin.Permissions.Abstractions.Permission.Location];
+            var requestedPermissionsLoc = await CrossPermissions.Current.RequestPermissionsAsync(Plugin.Permissions.Abstractions.Permission.Location);
+            var requestedPermissionsLocInUse = await CrossPermissions.Current.RequestPermissionsAsync(Plugin.Permissions.Abstractions.Permission.LocationWhenInUse);
+            //var requestedPermissionStatus = requestedPermissions[Plugin.Permissions.Abstractions.Permission.Location];
         }
 
         public async void ActivateBluetooth(object sender, EventArgs e)
@@ -126,16 +173,11 @@ namespace praticeApp.Views
 
             if (beacons.Count > 0)
             {
-                String str = "Er zijn " + beacons.Count + " beacons gevonden:\n";
                 BeaconJSON beaconInJson = new BeaconJSON();
 
                 foreach (Beacon b in beacons)
                 {
                     beaconInJson.Add(GetBeaconUUID(b), b.Rssi);
-
-                    str += " - " + GetBeaconUUID(b);
-                    str += " RSSI: " + b.Rssi.ToString();
-                    str += "\n";
                 }
 
                 try
@@ -181,11 +223,16 @@ namespace praticeApp.Views
                 }
                 
 
-                beaconsText.Text = str;
+                //beaconsText.Text = str;
+            } else
+            {
+                await DisplayAlert("Fout", "Er zijn geen beacons van Academy Attendance gevonden!", "OK");
             }
 
             ((Button)sender).Text = ((Button) sender).Text.Replace("...", "");
             ((Button)sender).IsEnabled = true;
+
+            await UpdateRegistrationEvents();
 
         }
 
