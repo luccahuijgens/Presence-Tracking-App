@@ -33,5 +33,9 @@ namespace praticeApp.Views
 
             MasterPage.ListView.SelectedItem = null;
         }
+        private void testMessage(String text)
+        {
+            DisplayAlert("Alert", text, "kek");
+        }
     }
 }

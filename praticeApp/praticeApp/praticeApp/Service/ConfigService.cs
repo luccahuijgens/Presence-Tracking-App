@@ -31,5 +31,15 @@ namespace praticeApp.Service
             ConfigFileReader.setScanState(newState);
         }
 
+        public void setTrackingTime(String time)
+        {
+            ConfigFileReader.setScanTime(time);
+        }
+
+        public String gettrackingTime()
+        {
+            return ConfigFileReader.GetScanTime();
+        }
+
     }
 }

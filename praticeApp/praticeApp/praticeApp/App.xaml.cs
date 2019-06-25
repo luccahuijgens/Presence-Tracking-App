@@ -4,7 +4,10 @@ using Xamarin.Forms.Xaml;
 using praticeApp.Views;
 using OpenNETCF.IoC;
 using praticeApp.Resources;
+using praticeApp.Controller;
+using System.Diagnostics;
 using praticeApp.DataAccess;
+using praticeApp.Service;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace praticeApp
@@ -19,9 +22,23 @@ namespace praticeApp
 
             RootWorkItem.Services.Add<YNCEndpoint>(new YNCEndpoint("https://beacon.aattendance.nl/api/v2/", true));
             MainPage = new NavigationPage(new NavMaster());
+            BackgroundController bController = new BackgroundController();
+            
+            ConfigService service = ServiceProvider.GetConfigService();
+
+            MessagingCenter.Subscribe<object>(this, "BackgroundLoop", (s) =>
+            {
+                Device.BeginInvokeOnMainThread(() =>
+              { 
+                  if (Convert.ToBoolean(service.GetTrackingState()))
+                  {
+                      bController.ActivateBluetooth();
+                  }
+                });
+            });
 
         }
-
+       
         protected override void OnStart()
         {
             // Handle when your app starts

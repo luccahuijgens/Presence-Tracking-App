@@ -11,9 +11,11 @@ using UniversalBeacon.Library.Core.Interfaces;
 using UniversalBeacon.Library;
 using Plugin.CurrentActivity;
 using Android.Bluetooth;
+using Android.Content;
 
 namespace praticeApp.Droid
 {
+    [IntentFilter(new[] { Android.Content.Intent.ActionBootCompleted })]
     [Activity(Label = "Attendance", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
@@ -21,6 +23,12 @@ namespace praticeApp.Droid
         {
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
+
+            //------[Start Background service]------]
+            var alarmIntent = new Intent(this, typeof(BackgroundReceiver));
+            var pending = PendingIntent.GetBroadcast(this, 0, alarmIntent, PendingIntentFlags.UpdateCurrent);
+            var alarmManager = GetSystemService(AlarmService).JavaCast<AlarmManager>();
+            alarmManager.SetRepeating(AlarmType.ElapsedRealtimeWakeup, 3000, 2999, pending);
 
             base.OnCreate(savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
@@ -43,5 +51,6 @@ namespace praticeApp.Droid
         {
             ZXing.Net.Mobile.Android.PermissionsHandler.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+
     }
 }

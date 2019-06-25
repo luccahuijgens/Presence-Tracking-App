@@ -70,25 +70,39 @@ namespace praticeApp.DataAccess
 
         public Boolean CheckConfigFile()
         {
-            if (File.Exists(GetConfigFilePathName()))
+            try
             {
-                Debug.WriteLine("Found ConfigFile....");
-                if (new FileInfo(GetConfigFilePathName()).Length == 0)
+                if (File.Exists(GetConfigFilePathName()))
                 {
-                    Debug.WriteLine("Empty ConfigFile.");
-                    return false;
+                    Debug.WriteLine("Found ConfigFile....");
+                    if (new FileInfo(GetConfigFilePathName()).Length == 0)
+                    {
+
+                        Debug.WriteLine("Empty ConfigFile.");
+                        DeleteConfigFile(); //For fixing a bug with old versions of the configloader.
+                        return false;
+                    }
+                    else
+                    {
+                        JObject jobject = JObject.Parse(ReadConfigFile()); //Test parse to ensure that the file is not corrupted
+                        Debug.WriteLine("ConfigFile valid!");
+                        return true;
+                    }
                 }
                 else
                 {
-                    Debug.WriteLine("ConfigFile valid!");
-                    return true;
+                    Debug.WriteLine("No ConfigFile found.");
+                    return false;
                 }
+
             }
-            else
+            catch
             {
-                Debug.WriteLine("No ConfigFile found.");
+                Debug.WriteLine("ConfigFile Corrupted!");
                 return false;
             }
         }
     }
 }
+
+    
