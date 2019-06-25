@@ -81,8 +81,8 @@
 
                 <StackLayout HorizontalOptions="Fill">
 
-                    <Button HorizontalOptions="FillAndExpand" x:Name ="autoRegBtn" Text="Automatische registratie" Clicked="ActivateBluetooth" BackgroundColor="#00a98c" TextColor="White" />
-                    <Button HorizontalOptions="FillAndExpand" x:Name ="manualRegBtn" Text="Handmatige registratie" Clicked="ActivateBluetooth" BackgroundColor="#00a98c" TextColor="White" />
+                    <Button HorizontalOptions="FillAndExpand" x:Name ="autoRegBtn" Text="Automatische registratie" Clicked="ActivateAutoScan" BackgroundColor="#00a98c" TextColor="White" />
+                    <Button HorizontalOptions="FillAndExpand" x:Name ="manualRegBtn" Text="Handmatige registratie" Clicked="ActivateManualScan" BackgroundColor="#00a98c" TextColor="White" />
 
                 </StackLayout>    
             </Grid>
