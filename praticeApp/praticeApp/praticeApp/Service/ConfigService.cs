@@ -7,21 +7,28 @@ using praticeApp.Domain;
 namespace praticeApp.Service
 {
     public class ConfigService
-    {
-        private ConfigLoader configLoader = new ConfigLoader();
+    { 
 
         public String GetStudentToken()
         {
             String ret = new String(new char[] { });
-
-            configLoader.LoadConfigTokenOutFile(ref ret);
-
+            ret = ConfigFileReader.GetToken();
             return ret;
         }
 
-        public void WriteStudentToken(String token)
+        public void WriteStudentToken(String newToken)
         {
-            configLoader.WriteConfigTokenInFile(token);
+            ConfigFileReader.setToken(newToken);
+        }
+
+        public String GetTrackingState()
+        {
+            return (ConfigFileReader.GetScanState());
+        }
+
+        public void setTrackingState(Boolean newState)
+        {
+            ConfigFileReader.setScanState(newState);
         }
 
     }
