@@ -21,6 +21,7 @@ using praticeApp.DataAccess;
 using static praticeApp.Domain.BeaconJSON;
 using System.Data;
 using System.Linq;
+using praticeApp.Controller;
 
 namespace praticeApp.Views
 {
@@ -137,7 +138,7 @@ namespace praticeApp.Views
             //var requestedPermissionStatus = requestedPermissions[Plugin.Permissions.Abstractions.Permission.Location];
         }
 
-        public async void ActivateBluetooth(object sender, EventArgs e)
+        public async void ActivateManualScan(object sender, EventArgs e)
         {
             if (_beaconDiscovery == null)
                 return;
@@ -236,6 +237,11 @@ namespace praticeApp.Views
 
         }
 
+        public async void ActivateAutoScan(object sender, EventArgs e)
+        {
+            TrackingController.switchTracking();
+        }
+
         public String GetBeaconUUID(Beacon b)
         {
             // Whenever a beacon protocol is detected, we print the advertisement data.
@@ -257,6 +263,8 @@ namespace praticeApp.Views
 
             return "";
         }
+
+        
 
         public void DumpBeacon(Beacon b)
         {
