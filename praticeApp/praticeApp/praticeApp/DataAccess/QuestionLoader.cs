@@ -71,8 +71,6 @@ namespace praticeApp.DataAccess
                 httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                 HttpResponseMessage response = httpClient.GetAsync(url).Result;
-                Debug.WriteLine("RESPONSE CODE");
-                Debug.WriteLine(response.StatusCode);
                 if (response.StatusCode != HttpStatusCode.OK)
                     return QuestionList;
 
@@ -103,23 +101,13 @@ namespace praticeApp.DataAccess
         {
             try
             {
-                var request = (HttpWebRequest)WebRequest.Create("https://beacon.aattendance.nl/api/v2/event-questions/" + questionId);
+                var httpClient = new HttpClient();
+                var url="https://beacon.aattendance.nl/api/v2/event-questions/" + questionId;
+                var content = new StringContent("{\"answer_possibility_id\":" + answerId + "}", Encoding.UTF8, "application/json");
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-
-                request.Method = "POST";
-                request.Headers.Add("Authorization", "Bearer" + token);
-                request.ContentType = "application/json";
-
-                using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-                {
-                    string json = "{\"answer_possibility_id\":"+answerId+"}";
-
-                    streamWriter.Write(json);
-                }
-
-                var response = (HttpWebResponse)request.GetResponse();
-
-                var responseString = new StreamReader(response.GetResponseStream()).ReadToEnd();
+                HttpResponseMessage response = httpClient.PostAsync(url, content).Result;
                 return true;
             }
             catch (Exception e)

@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using praticeApp.DataAccess;
+using praticeApp.Domain;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -87,6 +89,40 @@ namespace praticeApp.Resources
             }
         }
 
+        public async Task<KeyValuePair<YNCEndpointStatus, Events>> GetStudentEvents()
+        {
+            HttpResponseMessage response;
+
+            try
+            {
+                response = await PerformGETRequestJSONWithToken("/events");
+
+                String responseContent = response.Content.ReadAsStringAsync().Result;
+                YNCEndpointStatus status = CheckAuthFailure(response);
+
+                if (_verboseMode)
+                    Debug.WriteLine(responseContent);
+
+                if (status != YNCEndpointStatus.OK)
+                {
+                    return new KeyValuePair<YNCEndpointStatus, Events>(status, null);
+                }
+
+                Events events = JsonConvert.DeserializeObject<Events>(responseContent);
+ 
+
+                return new KeyValuePair<YNCEndpointStatus, Events>(status, events);
+            }
+            catch (Exception ex)
+            {
+                if (_verboseMode)
+                    Debug.WriteLine("GetStudentEvents() exception: " + ex.Message);
+
+
+                return new KeyValuePair<YNCEndpointStatus, Events>(YNCEndpointStatus.UnexpectedHttpError, null);
+            }
+        }
+
         protected YNCEndpointStatus CheckAuthFailure(HttpResponseMessage response)
         {
             if (!response.IsSuccessStatusCode)
@@ -136,6 +172,14 @@ namespace praticeApp.Resources
             client.CancelPendingRequests();
 
             return await client.PostAsync(uri, content);
+        }
+
+        protected async Task<HttpResponseMessage> PerformGETRequestJSONWithToken(String endpoint)
+        {
+            Uri uri = new Uri(baseUrl + endpoint);
+            client.CancelPendingRequests();
+
+            return await client.GetAsync(uri);
         }
 
         public String GetBaseURL()

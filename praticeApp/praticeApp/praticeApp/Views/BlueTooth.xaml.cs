@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using praticeApp.Domain;
 using praticeApp.DataAccess;
 using static praticeApp.Domain.BeaconJSON;
+using System.Data;
 
 namespace praticeApp.Views
 {
@@ -38,7 +39,39 @@ namespace praticeApp.Views
             
             _beaconDiscovery = new BeaconDiscovery();
         }
-            
+
+        protected async override void OnAppearing()
+        {
+            await UpdateRegistrationEvents();
+        }
+
+        public async Task UpdateRegistrationEvents()
+        {
+            var yncEndpoint = RootWorkItem.Services.Get<YNCEndpoint>();
+
+            if (yncEndpoint == null)
+            {
+                await DisplayAlert("Fout", "Er is een onbekende fout opgetreden! Probeer het later opnieuw.", "OK");
+                return;
+            }
+
+            KeyValuePair<YNCEndpointStatus, Events> events = await yncEndpoint.GetStudentEvents();
+
+            if (events.Key == YNCEndpointStatus.OK && events.Value != null)
+            {
+                // Update the events...
+
+                Debug.WriteLine(events.Value.data.ToString());
+
+                Debug.WriteLine(events.Value.data.Count);
+                
+                if (events.Value.data.Count > 0)
+                {
+                    Debug.WriteLine(events.Value.data[0].id);
+                }
+            }
+        }
+
         public async Task RequestPermissions()
         {
             await RequestLocationPermission();
