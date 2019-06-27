@@ -26,17 +26,17 @@ namespace praticeApp.Service
             return (ConfigFileReader.GetScanState());
         }
 
-        public void setTrackingState(Boolean newState)
+        public void SetTrackingState(Boolean newState)
         {
             ConfigFileReader.setScanState(newState);
         }
 
-        public void setTrackingTime(String time)
+        public void SetTrackingTime(String time)
         {
             ConfigFileReader.setScanTime(time);
         }
 
-        public String gettrackingTime()
+        public String GetTrackingTime()
         {
             return ConfigFileReader.GetScanTime();
         }

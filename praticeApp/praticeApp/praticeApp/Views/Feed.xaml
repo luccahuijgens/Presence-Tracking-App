@@ -7,7 +7,7 @@
     <StackLayout>
         <Label x:Name="emptyLabel" FontSize="16" Text="There are no notifications or questions for you. Have a nice day!" IsVisible="true"></Label>
         <ListView x:Name="MyListView"
-                  ItemsSource="FeedList"
+                  
             ItemTapped="ItemTapped"
             CachingStrategy="RecycleElement"
             HasUnevenRows = "True"

@@ -39,7 +39,7 @@ namespace praticeApp.Views
                         new NavMasterMenuItem { Id = 1, Title = "App koppelen", TargetType=(typeof (Scan))},
                         new NavMasterMenuItem { Id = 2, Title = "Feed", TargetType=(typeof (Feed))},
                         new NavMasterMenuItem { Id = 3, Title = "Aanwezigheid", TargetType=(typeof (BlueTooth))},
-                        new NavMasterMenuItem { Id = 4, Title = "Tracking", TargetType=(typeof (Tracking))}
+                       // new NavMasterMenuItem { Id = 4, Title = "Tracking", TargetType=(typeof (Tracking))}
 
                     });
             }

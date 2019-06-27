@@ -10,17 +10,24 @@ namespace praticeApp.Controller
     class TrackingController
     {
         public static ConfigService service = ServiceProvider.GetConfigService();
-        public static void switchTracking()
+        public static String switchTracking()
         {
-            Debug.WriteLine("New tracking state: " + service.GetTrackingState());
+           
             if (Convert.ToBoolean(service.GetTrackingState()))
             {
-                service.setTrackingState(false);
+                service.SetTrackingState(false);
             }
             else
             {
-                service.setTrackingState(true);
+                service.SetTrackingState(true);
             }
+            Debug.WriteLine("New tracking state: " + service.GetTrackingState());
+            return service.GetTrackingState();
+        }
+
+        public static String GetCurrentTrackingState()
+        {
+            return (service.GetTrackingState());
         }
     }
 }

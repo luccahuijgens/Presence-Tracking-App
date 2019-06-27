@@ -36,8 +36,12 @@ namespace praticeApp
               { 
                   if (Convert.ToBoolean(service.GetTrackingState()))
                   {
+                      service.SetTrackingTime( "1");
+                      //MainPage.DisplayAlert("test", service.gettrackingTime(), "okay");
                       bController.ActivateBluetooth();
-                      service.setTrackingTime(service.gettrackingTime() + "1");
+                     
+                      
+                    
                   }
                 });
             });

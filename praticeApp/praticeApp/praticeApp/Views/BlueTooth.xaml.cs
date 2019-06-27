@@ -40,6 +40,17 @@ namespace praticeApp.Views
             String token = new String(new char[] { });
             
             _beaconDiscovery = new BeaconDiscovery();
+
+            if (Convert.ToBoolean(TrackingController.GetCurrentTrackingState()))
+            {
+                autoRegBtn.BackgroundColor = Color.Red;
+                autoRegBtn.Text = "Stop automatische registratie";
+            }
+            else
+            {
+                autoRegBtn.BackgroundColor = Color.Green;
+                autoRegBtn.Text = "Start automatische registratie";
+            }
         }
 
         protected async override void OnAppearing()
@@ -239,7 +250,21 @@ namespace praticeApp.Views
 
         public async void ActivateAutoScan(object sender, EventArgs e)
         {
-            TrackingController.switchTracking();
+            String status;
+            if (Convert.ToBoolean(TrackingController.switchTracking()))
+            {
+                status = "Aan";
+                autoRegBtn.BackgroundColor = Color.Red;
+                autoRegBtn.Text = "Stop automatische registratie";
+            }
+            else
+            {
+                status = "Uit";
+                autoRegBtn.BackgroundColor = Color.Green;
+                autoRegBtn.Text = "Start automatische registratie";
+
+            }
+            await DisplayAlert("Tracking status is aangepast", "Automatische tracking staat nu: " + status, "Begrepen");
         }
 
         public String GetBeaconUUID(Beacon b)
